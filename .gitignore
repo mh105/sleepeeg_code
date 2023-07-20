@@ -1,0 +1,22 @@
+# Large files for the EDF Deidentifier
+EDF_Deidentification_updated/EDF_Deidentifier_3.0_win64/for_redistribution/Install_EDF_Deidentifier_mcr.exe
+EDF_Deidentification_updated/EDF_Deidentifier_3.0_win64/SPtest_night2_Sleep_clinical.edf
+
+.idea #pycharm files
+*.log #ignore all logs
+
+#compiled codes
+.o
+.pyc
+.class
+
+#hidden system file
+.DS_Store
+Thumbs.db
+.Rproj.user
+
+#file copies 
+._*
+.asv
+
+#large files 
