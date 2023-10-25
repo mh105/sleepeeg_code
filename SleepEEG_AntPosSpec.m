@@ -160,7 +160,7 @@ for i = 1:length(chanlist)
     if i == 1; verbose=true; else; verbose=false; end
     
     [mt_spectrogram{1,i},stimes{1,i},sfreqs{1,i}] = multitaper_spectrogram_mex(EEG.data(chanlist(i),:), EEG.srate, [0, (EEG.srate)/2],...
-        [5, 9], [5, 1], 0, 'constant', 'unity', false, verbose);
+        [5, 9], [5, 1], 0, 'linear', 'unity', false, verbose);
 end
 
 % Repeat spectral estimation after applying a band-stop filter around 60Hz
@@ -168,7 +168,7 @@ if EEG.srate / 2 > 55
     for i = 1:length(chanlist)
         eeg = bandstop(EEG.data(chanlist(i),:), [55, min(65, EEG.srate / 2)], EEG.srate);
         [mt_spectrogram{2,i},stimes{2,i},sfreqs{2,i}] = multitaper_spectrogram_mex(eeg, EEG.srate, [0, (EEG.srate)/2],...
-            [5, 9], [5, 1], 0, 'constant', 'unity', false, false);
+            [5, 9], [5, 1], 0, 'linear', 'unity', false, false);
     end
 else
     mt_spectrogram(2,:) = mt_spectrogram(1,:);
