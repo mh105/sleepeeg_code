@@ -22,7 +22,7 @@ function [ dataDir, subject_list ] = SleepEEG_addpath(envpath)
 if strcmp(envpath(1:13), '/Applications')
     % ---------- for Alex local env -------------
     % set up directories
-    rootDir = '~/Dropbox/Mac_Desktop/MIT_HST/NSRL_Purdon_Prerau/EEG';
+    rootDir = '~/Dropbox/MIT_HST/NSRL_Purdon_Prerau/EEG';
     
     % Add path to Alex's code folder
     addpath([rootDir, '/code/sleepeeg_code'])
