@@ -46,56 +46,30 @@ if strcmp(envpath(1:13), '/Applications')
     addpath(dataDir)
     cd(currentpath)
     
-elseif strcmp(envpath(1:7), '/autofs')
-    % ---------- for NMR machine env -------------
-    % for the ***adsleepeeg*** folder
-    
-    % set up root directories
-    rootDir = '/autofs/cifs/adsleepeeg';
-    
-    % Add path to Alex's code folder
-    addpath([rootDir, '/code/sleepeeg_code'])
-    
-    % Add path to ANT_interface_code folder
-    addpath([rootDir, '/code/ANT_interface_code'])
-    
-    % Add path to ANT importer
-    addpath([rootDir, '/code/ANT_interface_code/ANTeepimport1.13'])
-    
-    % Add path to EEGLAB
-    addpath([rootDir, '/code/ANT_interface_code/eeglab14_1_2b'])
-    
-    % Add path to EDF_deidentifier
-    addpath([rootDir, '/code/sleepeeg_code/EDF_Deidentification_updated'])
-    
-    % Add path to Data folder
-    dataDir = [rootDir, '/archive/subject_data'];
-    addpath(dataDir)
-    
 else
-    % ---------- for ERIS cluster env -------------
-    % for the ***adsleepeeg*** folder
+    % ---------- for workstation cerulean -------------
+    % for the *** aeas *** project folder
     
     % set up root directories
-    rootDir = '/data/adsleepeeg/';
+    rootDir = '/remote/projects/aeas';
     
     % Add path to Alex's code folder
-    addpath([rootDir, '/code/sleepeeg_code'])
+    addpath('/remote/users/mh1/sleepeeg_code')
     
     % Add path to ANT_interface_code folder
-    addpath([rootDir, '/code/ANT_interface_code'])
+    addpath('/remote/users/mh1/ant_interface_code')
     
     % Add path to ANT importer
-    addpath([rootDir, '/code/ANT_interface_code/ANTeepimport1.13'])
+    addpath('/remote/users/mh1/ant_interface_code/ANTeepimport1.13')
     
     % Add path to EEGLAB
-    addpath([rootDir, '/code/ANT_interface_code/eeglab14_1_2b'])
+    addpath('/remote/users/mh1/ant_interface_code/eeglab14_1_2b')
     
     % Add path to EDF_deidentifier
-    addpath([rootDir, '/code/sleepeeg_code/EDF_Deidentification_updated'])
+    addpath('/remote/users/mh1/sleepeeg_code/EDF_Deidentification_updated')
     
     % Add path to Data folder
-    dataDir = [rootDir, '/archive/subject_data'];
+    dataDir = fullfile(rootDir, 'subject_data');
     addpath(dataDir)
     
 end
