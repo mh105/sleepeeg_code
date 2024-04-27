@@ -1,5 +1,5 @@
 function [] = resting_meanap(subID,fnsuffix, interpolate)
-%Function used to compute the mean alpha power
+%Function used to compute the mean alpha psd
 if nargin < 3
     interpolate = true;
 end
@@ -18,7 +18,7 @@ else
         'dead', true, 'interp', interpolate, 'reref', {true, 'AR'}, 'oversave', true);
 end
 
-% Now we have the data, we compute the mean alpha power and plot
+% Now we have the data, we compute the mean alpha psd and plot
 % spectrogram - pick channel 25 to compute.
 
 data = EEG.data(25, EEG.times > (EEG.times(end)-5*60*1000));
@@ -41,7 +41,7 @@ colormap jet
 climscale
 axis tight
 c= colorbar;
-ylabel(c, 'Power (dB)');
+ylabel(c, 'PSD (dB)');
 set(gca, 'FontSize', 16)
 saveas(gcf, fullfile(dataDir, subID, 'analysis', [fileID, '_meanAlpha_spectrogram.png']))
 
@@ -51,16 +51,16 @@ figure
 plot(sfreqs, pow2db(y), 'LineWidth', 2)
 title('Mean Spectrum - Z10')
 xlabel('Frequency (Hz)')
-ylabel('Average Power (dB)')
+ylabel('Average PSD (dB)')
 set(gca, 'FontSize', 16)
 axis tight
 xlim(visfreq)
 ylim(ylim*1.1)
 saveas(gcf, fullfile(dataDir, subID, 'analysis', [fileID, '_meanAlpha_spectrum.png']))
 
-% compute the mean alpha power between 8-12
+% compute the mean alpha PSD between 8-12
 meanap = pow2db(mean(y(sfreqs>=8 & sfreqs <=12)));
-disp(['Mean alpha power = ', num2str(meanap) ,' dB'])
+disp(['Mean alpha psd = ', num2str(meanap) ,' dB'])
 f = fopen(fullfile(dataDir, subID, 'analysis', [fileID, '_meanAlpha_value.txt']), 'w');
 fprintf(f, '%.5f', meanap);
 fclose(f);

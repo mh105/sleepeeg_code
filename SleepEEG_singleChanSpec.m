@@ -110,7 +110,7 @@ for i = 1:length(channelNum) % loop through each channel number
     ylabel('Frequency (Hz)');
     c=colorbar;
     title(['Spectrogram for sensor ' num2str(channelNum(i))])
-    ylabel(c,'Power (dB)');
+    ylabel(c,'PSD (dB)');
     set(gca, 'FontSize', 16)
     colormap jet
     climscale;
@@ -145,7 +145,7 @@ for i = 1:length(channelNum) % loop through each channel number
     hold on
     title(['Median Spectrum for sensor ' num2str(channelNum(i))])
     xlabel('Frequency (Hz)')
-    ylabel('Average Power [dB]')
+    ylabel('Average PSD (dB)')
     set(gca, 'FontSize', 16)
     axis tight
     

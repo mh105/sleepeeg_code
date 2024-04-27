@@ -162,7 +162,7 @@ if strcmp(datasource, 'eeg') ||  strcmp(datasource, 'both')
     climscale;
     axis tight
     c = colorbar;
-    ylabel(c, 'Power (dB)');
+    ylabel(c, 'PSD (dB)');
     set(gca, 'FontSize', 16)
     
     linkaxes([ax(1), ax(2)], 'x')
@@ -229,7 +229,7 @@ if strcmp(datasource, 'edf') ||  strcmp(datasource, 'both')
     axis tight
     c = colorbar;
     caxis([-20, 20])
-    ylabel(c, 'Power (dB)');
+    ylabel(c, 'PSD (dB)');
     set(gca, 'FontSize', 16)
     
     linkaxes([ax(1), ax(2)], 'x')

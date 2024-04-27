@@ -13,7 +13,7 @@ colormap jet
 climscale
 axis tight
 c= colorbar;
-ylabel(c, 'Power (dB)');
+ylabel(c, 'PSD (dB)');
 set(gca, 'FontSize', 20)
 
 end

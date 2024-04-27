@@ -1,6 +1,6 @@
 %% Resting State Spectral Estimation Investigation
 % We found some interesting patterns in the AD Sleep project resting state,
-% where the young adults have a band of low alpha power during eyes closed
+% where the young adults have a band of low alpha psd during eyes closed
 % period under common average referencing. Is this replicated in the NSS
 % dataset with 65 channels? 
 
@@ -112,7 +112,7 @@ title({'Multitaper Spectral Estimation'}, 'interpreter', 'none')
 set(gca, 'FontSize', 20)
 
 
-%% Topoplot of alpha peak power under CA
+%% Topoplot of alpha peak psd under CA
 chanlocs = eloc_new;
 alpha_peakp = zeros(1, length(chanlocs));
 
@@ -128,7 +128,7 @@ for k = 1:length(chanlocs)
     % mtm one particular parameter set choice
     [mts, st, sf] = multitaper_spectrogram_optimized(s,...
         Fs, [0, (Fs/2)], [2,3], [5,1], 2^16, 'linear', false, false);
-    % find alpha peak power
+    % find alpha peak psd
     y = nanmean(mts, 1);
     alpha_peakp(k) = max(y(sf >= 8 & sf <= 12));
 end
@@ -136,9 +136,9 @@ end
 figure
 set(gcf, 'Position', [1601 70 1600 1168])
 topoplot(pow2db(alpha_peakp), chanlocs, 'style','both','electrodes','on','emarker', {'.', 'w', 30, 1});
-title({'8-12Hz Peak Power During Eyes Closed', 'Common Average Reference'}, 'FontSize', 16)
+title({'8-12Hz Peak PSD During Eyes Closed', 'Common Average Reference'}, 'FontSize', 16)
 c=colorbar;
-ylabel(c,'Power (dB)');
+ylabel(c,'PSD (dB)');
 set(gca, 'FontSize', 20)
 climscale
 
@@ -340,7 +340,7 @@ for ii = 1:length(subject_list)
         savefig(fullfile(dataDir, 'outputs', [sid, '_', task, '_meanSpectrum']))
         saveas(gcf, fullfile(dataDir, 'outputs', [sid, '_', task, '_meanSpectrum.png']))
         
-        %% Topoplot of alpha peak power under CA
+        %% Topoplot of alpha peak psd under CA
         chanlocs = EEG1.chanlocs;
         alpha_peakp = zeros(1, length(chanlocs));
         
@@ -357,7 +357,7 @@ for ii = 1:length(subject_list)
             % mtm one particular parameter set choice
             [mts, st, sf] = multitaper_spectrogram_optimized(s,...
                 Fs, [0, (Fs/2)], [2,3], [5,1], 2^16, 'linear', false, false);
-            % find alpha peak power
+            % find alpha peak psd
             y = nanmean(mts, 1);
             alpha_peakp(k) = max(y(sf >= 8 & sf <= 12));
         end
@@ -367,9 +367,9 @@ for ii = 1:length(subject_list)
         figure
         set(gcf, 'Position', [1601 70 1600 1168])
         topoplot(pow2db(alpha_peakp), chanlocs, 'style','both','electrodes','on','emarker', {'.', 'w', 30, 1});
-        title({'8-12Hz Peak Power During Eyes Closed', 'Common Average Reference'}, 'FontSize', 16)
+        title({'8-12Hz Peak PSD During Eyes Closed', 'Common Average Reference'}, 'FontSize', 16)
         c=colorbar;
-        ylabel(c,'Power (dB)');
+        ylabel(c,'PSD (dB)');
         set(gca, 'FontSize', 20)
         climscale
         
@@ -381,7 +381,7 @@ for ii = 1:length(subject_list)
         
         saveas(gcf, fullfile(dataDir, 'outputs', [sid, '_', task, '_topo_CA.png']))
         
-        %% Topoplot of alpha peak power under Laplacian (Local Average)
+        %% Topoplot of alpha peak psd under Laplacian (Local Average)
         % load the set file
         EEG2 = SleepEEG_loadset(sid, task);
         
@@ -440,7 +440,7 @@ for ii = 1:length(subject_list)
             % mtm one particular parameter set choice
             [mts, st, sf] = multitaper_spectrogram_optimized(s,...
                 Fs, [0, (Fs/2)], [2,3], [5,1], 2^16, 'linear', false, false);
-            % find alpha peak power
+            % find alpha peak psd
             y = nanmean(mts, 1);
             alpha_peakp(k) = max(y(sf >= 8 & sf <= 12));
         end
@@ -450,9 +450,9 @@ for ii = 1:length(subject_list)
         figure
         set(gcf, 'Position', [1601 70 1600 1168])
         topoplot(pow2db(alpha_peakp), chanlocs, 'style','both','electrodes','on','emarker', {'.', 'w', 30, 1});
-        title({'8-12Hz Peak Power During Eyes Closed', 'Laplacian Reference'}, 'FontSize', 16)
+        title({'8-12Hz Peak PSD During Eyes Closed', 'Laplacian Reference'}, 'FontSize', 16)
         c=colorbar;
-        ylabel(c,'Power (dB)');
+        ylabel(c,'PSD (dB)');
         set(gca, 'FontSize', 20)
         climscale
         

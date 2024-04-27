@@ -195,7 +195,7 @@ colormap jet
 climscale
 axis tight
 c= colorbar;
-ylabel(c, 'Power (dB)');
+ylabel(c, 'PSD (dB)');
 set(gca, 'FontSize', 16)
 
 % plot the spectrum
@@ -205,7 +205,7 @@ hold on
 plot(sfreqs, pow2db(y), 'LineWidth', 2)
 title('Mean Spectrum - Z10')
 xlabel('Frequency (Hz)')
-ylabel('Average Power (dB)')
+ylabel('Average PSD (dB)')
 set(gca, 'FontSize', 16)
 axis tight
 xlim(visfreq)
@@ -252,7 +252,7 @@ colormap jet
 climscale
 axis tight
 c= colorbar;
-ylabel(c, 'Power (dB)');
+ylabel(c, 'PSD (dB)');
 set(gca, 'FontSize', 16)
 
 % plot the spectrum
@@ -262,7 +262,7 @@ hold on
 plot(sfreqs, pow2db(y1), 'LineWidth', 2)
 title(['Mean Spectrum - Z10 Comparison to shrinkage factor ', num2str(deamp_factor)])
 xlabel('Frequency (Hz)')
-ylabel('Average Power (dB)')
+ylabel('Average PSD (dB)')
 legend('Original', 'Converted')
 set(gca, 'FontSize', 16)
 axis tight
