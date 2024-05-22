@@ -57,6 +57,11 @@ if ~exist('fileID', 'var')
     fileID = [subID, '_', fnsuffix];
 end
 
+% If the path to ANT_interface_code was not added, add it now
+if ~exist('ANT_interface_readcnt', 'file') == 2
+    SleepEEG_addpath(matlabroot);
+end
+
 %% Command window display settings
 % Beginning of command window messages.
 mHead = 'SleepEEG: ';
@@ -110,13 +115,7 @@ elseif oversave && isfile(fullfile(dataDir, subID, subfolder, [savefn, '.set']))
         disp([mHead, 'Reading raw .cnt file now.']);
         disp(' ')
     end
-    try
-        EEG = ANT_interface_readcnt(filename, filepath, dsrate, verbose);
-    catch
-        % maybe the path to ANT_interface_code was not added
-        SleepEEG_addpath(matlabroot);
-        EEG = ANT_interface_readcnt(filename, filepath, dsrate, verbose);
-    end
+    EEG = ANT_interface_readcnt(filename, filepath, dsrate, verbose);
     
     % Save downsampled data
     if verbose; disp([mHead, 'Oversave is true, overwriting ', savefn, '.set']); end
@@ -127,14 +126,9 @@ else % otherwise we need to use ANT_interface_readcnt() to load the data
         disp([mHead, savefn, '.set is not found, reading raw .cnt file now.']);
         disp(' ')
     end
-    try
-        EEG = ANT_interface_readcnt(filename, filepath, dsrate, verbose);
-    catch
-        % maybe the path to ANT_interface_code was not added
-        SleepEEG_addpath(matlabroot);
-        EEG = ANT_interface_readcnt(filename, filepath, dsrate, verbose);
-    end
     
+    EEG = ANT_interface_readcnt(filename, filepath, dsrate, verbose);
+
     % Save downsampled data
     if verbose; disp([mHead, savefn, '.set does not exist, saving data now.']); end
     EEG = ANT_interface_saveset(EEG, savefn, savefilepath, verbose);
