@@ -36,6 +36,9 @@ if strcmp(envpath(1:13), '/Applications')
     % Add path to EEGLAB
     addpath([rootDir, '/code/ANT_interface_code/eeglab14_1_2b'])
     
+    % Add path to EEGLAB firflit plugin for pop_resample()
+    addpath([rootDir, '/code/ANT_interface_code/eeglab14_1_2b/plugins/firfilt1.6.2'])
+    
     % Add path to EDF_deidentifier
     addpath([rootDir, '/code/sleepeeg_code/EDF_Deidentification_updated'])
     
@@ -64,6 +67,9 @@ else
     
     % Add path to EEGLAB
     addpath('/remote/users/mh1/code/ant_interface_code/eeglab14_1_2b')
+    
+    % Add path to EEGLAB firflit plugin for pop_resample()
+    addpath('/remote/users/mh1/code/ant_interface_code/eeglab14_1_2b/plugins/firfilt1.6.2')
     
     % Add path to EDF_deidentifier
     addpath('/remote/users/mh1/code/sleepeeg_code/EDF_Deidentification_updated')
