@@ -49,7 +49,7 @@ function [ EEG1 ] = SleepEEG_call(subID, fnsuffix, varargin)
 %           - 'reref':      whether re-reference to common average reference.
 %                           options are:
 %                               - AR (common average)
-%                               - Z3 (recording reference at Z3 no.85)
+%                               - Z3 (recording reference at Z3)
 %                               - [CH] (arbitrary channel number as reference)
 %                               - left mastoid
 %                               - linked mastoid
@@ -248,7 +248,7 @@ else % otherwise use fnsuffix to select one .cnt file
     %           - 'reref':      whether re-reference to common average reference.
     %                           options are:
     %                               - AR (common average)
-    %                               - Z3 (recording reference at Z3 no.85)
+    %                               - Z3 (recording reference at Z3)
     %                               - [CH] (arbitrary channel number as reference)
     %                               - left mastoid
     %                               - linked mastoid
