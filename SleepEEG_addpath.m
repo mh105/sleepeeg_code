@@ -35,6 +35,7 @@ if strcmp(envpath(1:13), '/Applications')
     
     % Add path to EEGLAB
     addpath([rootDir, '/code/ANT_interface_code/eeglab14_1_2b'])
+    eeglab nogui;
     
     % Add path to EEGLAB firfilt plugin for pop_resample()
     addpath([rootDir, '/code/ANT_interface_code/eeglab14_1_2b/plugins/firfilt1.6.2'])
@@ -67,6 +68,7 @@ else
     
     % Add path to EEGLAB
     addpath('/remote/users/mh1/code/ant_interface_code/eeglab14_1_2b')
+    eeglab nogui;
     
     % Add path to EEGLAB firfilt plugin for pop_resample()
     addpath('/remote/users/mh1/code/ant_interface_code/eeglab14_1_2b/plugins/firfilt1.6.2')
