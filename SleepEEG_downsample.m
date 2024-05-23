@@ -107,6 +107,7 @@ if ~oversave && isfile(fullfile(dataDir, subID, subfolder, [savefn, '.set']))
         disp([mHead, 'Reading directly from disk, not overwriting.']);
         disp(' ')
     end
+    
     EEG = ANT_interface_loadset([savefn, '.set'], fullfile(dataDir, subID, subfolder), verbose, false);
     
 elseif oversave && isfile(fullfile(dataDir, subID, subfolder, [savefn, '.set']))
@@ -115,6 +116,7 @@ elseif oversave && isfile(fullfile(dataDir, subID, subfolder, [savefn, '.set']))
         disp([mHead, 'Reading raw .cnt file now.']);
         disp(' ')
     end
+    
     EEG = ANT_interface_readcnt(filename, filepath, dsrate, verbose);
     
     % Save downsampled data
