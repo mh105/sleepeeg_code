@@ -40,8 +40,9 @@ if strcmp(envpath(1:13), '/Applications')
     % Add path to EEGLAB firfilt plugin for pop_resample()
     addpath([rootDir, '/code/ANT_interface_code/eeglab14_1_2b/plugins/firfilt1.6.2'])
     
-    % Add path to EDF_deidentifier
-    addpath([rootDir, '/code/sleepeeg_code/EDF_Deidentification_updated'])
+    % Add path to helper functions
+    addpath([rootDir, '/code/sleepeeg_code/helper_functions'])
+    addpath([rootDir, '/code/sleepeeg_code/helper_functions/EDF_Deidentification_updated'])
     
     % Add path to Data folder
     currentpath = pwd;
@@ -73,8 +74,9 @@ else
     % Add path to EEGLAB firfilt plugin for pop_resample()
     addpath('/remote/users/mh1/code/ant_interface_code/eeglab14_1_2b/plugins/firfilt1.6.2')
     
-    % Add path to EDF_deidentifier
-    addpath('/remote/users/mh1/code/sleepeeg_code/EDF_Deidentification_updated')
+    % Add path to helper functions
+    addpath('/remote/users/mh1/code/sleepeeg_code/helper_functions')
+    addpath('/remote/users/mh1/code/sleepeeg_code/helper_functions/EDF_Deidentification_updated')
     
     % Add path to Data folder
     dataDir = fullfile(rootDir, 'subject_data');
