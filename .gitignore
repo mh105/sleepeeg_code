@@ -1,6 +1,6 @@
 # Large files for the EDF Deidentifier
-EDF_Deidentification_updated/EDF_Deidentifier_3.0_win64/for_redistribution/Install_EDF_Deidentifier_mcr.exe
-EDF_Deidentification_updated/EDF_Deidentifier_3.0_win64/SPtest_night2_Sleep_clinical.edf
+helper_functions/EDF_Deidentification_updated/EDF_Deidentifier_3.0_win64/for_redistribution/Install_EDF_Deidentifier_mcr.exe
+helper_functions/EDF_Deidentification_updated/EDF_Deidentifier_3.0_win64/SPtest_night2_Sleep_clinical.edf
 
 .idea #pycharm files
 *.log #ignore all logs
