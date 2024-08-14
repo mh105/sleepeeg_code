@@ -63,7 +63,6 @@ end
 dataDir = SleepEEG_addpath(matlabroot);
 
 %% Instantiate Subject Data and Path Directories
-
 if isempty(fnsuffix) % if fnsuffix is not specified, we process all available data for the subject
     cntfiles = dir(fullfile(dataDir, subID, 'raw', [subID, '*.cnt']));
     if verbose
@@ -90,6 +89,10 @@ else % otherwise use fnsuffix to select one .cnt file
     cntfn = [subID, '_', fnsuffix, '.cnt'];
     datafn =  fullfile(dataDir, subID, 'raw', cntfn);
     fileID = [subID, '_', fnsuffix];
+    
+    % make sure the specified datafn actually exisits
+    assert(exist(datafn, 'file'), [mHead, 'Specified cnt file does not exist. Please double check: "', datafn, '"'])
+    
     if verbose
         disp("===================================================")
         disp([mHead, 'Current subject file ID: "', fileID, '"'])
