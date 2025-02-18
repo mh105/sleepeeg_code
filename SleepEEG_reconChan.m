@@ -1,4 +1,4 @@
-function [ channelfn ] = SleepEEG_reconChan(subID, fnsuffix, channelNum, dataDir, datafn, fileID)
+function [ channelfn ] = SleepEEG_reconChan(subID, fnsuffix, channelNum, project, dataDir, datafn, fileID)
 %
 % **ADSLEEPEEG_PREPROCESSING FUNCTION - RECONCHAN**
 %
@@ -18,13 +18,16 @@ function [ channelfn ] = SleepEEG_reconChan(subID, fnsuffix, channelNum, dataDir
 %           - channelNum:   a vector containing channel numbers to extract,
 %                           e.g. [25, 84]. Required.
 %
+%           - project:      an optional string to specify project name for
+%                           path configuration.
+%
 %           - dataDir:      directory path containing all subjects' data.
 %
 %           - datafn:       full path to the .cnt file including preceding
 %                           directories. Can be obtained from
 %                           SleepEEG_configDir(subID, fnsuffix, verbose)
 %
-%           - fileID:       name of the .cnt file (no .cnt suffix). 
+%           - fileID:       name of the .cnt file (no .cnt suffix).
 %
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 % ###### Outputs:
@@ -35,6 +38,10 @@ function [ channelfn ] = SleepEEG_reconChan(subID, fnsuffix, channelNum, dataDir
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 assert(exist('channelNum', 'var')==1, 'No channel number provided for reconstruction!')
+
+if nargin < 4
+    project = '';
+end
 
 %% Command window display settings
 % Beginning of command window messages.
@@ -52,7 +59,7 @@ disp([mHead, 'Reconstructing channels in original sampling frequency: ', num2str
 
 %% Define Directories of Codes and Data Folders
 if ~exist('dataDir', 'var')
-        [dataDir, datafn, fileID, ~] = SleepEEG_configDir(subID, fnsuffix, false);
+    [dataDir, datafn, fileID, ~] = SleepEEG_configDir(subID, fnsuffix, false, project);
 end
 
 %% Report EEG Record Length
@@ -95,15 +102,15 @@ tic
 for j = channelNum % loop through each channel number
     % Initialize the channel data vector
     channel_data = zeros(1, cnt_info.sample_count);
-    
+
     % load each segment sequentially and save as one file
     for i = 1:length(sample_point)-1
-        
+
         % load in one segment of data
         filename = [fileID '_Channel_' num2str(j) '_' num2str(i) '_segment'];
         load(fullfile(dataDir, subID, 'temp', filename), 'chan_data')
         disp([mHead, 'Loading the ' num2str(i) 'th channel segment...'])
-        
+
         % specify indices in channel data
         if i == 1
             sample1 = 1;
@@ -111,16 +118,16 @@ for j = channelNum % loop through each channel number
             sample1 = sample_point(i)+1;
         end
         sample2 = sample_point(i+1);
-        
+
         channel_data(sample1:sample2) = chan_data;
         clearvars chan_data
-        
+
     end
-    
+
     % save the segment for ONE channel
     filename = [fileID '_Channel_' num2str(j) '_all_segment'];
     save(fullfile(dataDir, subID, 'channel', filename), 'channel_data')
-    
+
     % add file name to the cell array for returning function output
     channelfn{channelNum==j} = fullfile(dataDir, subID, 'channel', filename);
 end

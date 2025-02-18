@@ -150,13 +150,13 @@ if nargout > 1
     disp([mHead, 'Reverse alignment to the HD-EEG timeframe...'])
     % Load the reverse alignment structure saved in trigger alignment code
     load(fullfile(filepath, rvsFN), 'rvsalign_store')
-    
+
     % In some of the early recordings, stochastic triggers were not
     % available, so Amanda had to perform manual alignment that
-    % unfortunately resulted in incorrect indices saved in rvsalign_store.    
+    % unfortunately resulted in incorrect indices saved in rvsalign_store.
     % In these cases, we need to search for the matching points using the
-    % C3 channel. 
-    
+    % C3 channel.
+
     if rvsalign_store.truncate_endidx > rvsalign_store.original_length
         % truncate_endidx > original_length is the indication that this
         % recording was manually aligned because in the code used for
@@ -164,10 +164,10 @@ if nargout > 1
         % This could never happen in automatic alignment because
         % truncate_endidx is supposed to cut the original EEG data
         disp([mHead, '[!] Manual alignment detected, need to search for matching points...'])
-        
+
         % remove the padding on both ends of aligned signal in edf file
         aligned_signal_nopadding = aligned_signal(rvsalign_store.begin_pad+1:length(aligned_signal)-rvsalign_store.end_pad);
-        
+
         % now we need to load the set file and grab the EEG channel used to
         % emulate C3 in the aligned edf - this takes a while to load.
         subID = txtFN(1:strfind(txtFN,'_night')-1);
@@ -176,7 +176,7 @@ if nargout > 1
         set_filepath = strrep(filepath, 'clinical', 'set');
         EEG_new = ANT_interface_loadset(filename, set_filepath, true, false);
         originalEEG = EEG_new.data(label2num('LA2',EEG_new.chanlocs),:); % C3 corresponds to LA2
-        
+
         % find where the aligned_signal_nopadding starts and ends
         search_tic = tic;
         length_diff = length(originalEEG) - length(aligned_signal_nopadding);
@@ -188,24 +188,24 @@ if nargout > 1
         [~, aligned_startidx] = min(all_diff_sum);
         disp([mHead, 'Time taken in searching for matching points:'])
         toc(search_tic)
-        
+
         % construct the stage_channel vector in EEG timeframe
         EEGvec_stage_channel = zeros(length(originalEEG),1);
         EEGvec_stage_channel(aligned_startidx:aligned_startidx+length(aligned_signal_nopadding)-1) = stage_channel(rvsalign_store.begin_pad+1:length(stage_channel)-rvsalign_store.end_pad);
-        
+
         % remove extra staging at the end
         if length(EEGvec_stage_channel) > length(originalEEG)
             EEGvec_stage_channel(length(originalEEG)+1:end) = [];
         end
-        
+
     else % with correctly behaving stochastic triggers, the rvsalign_store carries everything we need
         % figure out the cutting indices
         cut_begin = rvsalign_store.begin_pad - rvsalign_store.truncate_startidx + 2;
         cut_end = length(stage_channel) - (rvsalign_store.end_pad - (rvsalign_store.original_length - rvsalign_store.truncate_endidx));
-        
+
         % sanity check on the length of EEGvec_stage_channel
         assert(length(cut_begin:cut_end) == rvsalign_store.original_length, 'Length of EEG channel computed from cut_begin/end is incorrect.')
-        
+
         % Edge case 1: the clinical system started after begin triggers
         if cut_begin < 0
             zeropad = zeros(rvsalign_store.truncate_startidx - 1 - rvsalign_store.begin_pad, 1);
@@ -213,7 +213,7 @@ if nargout > 1
         else
             zeropad = [];
         end
-        
+
         % construct the stage_channel vector in EEG timeframe
         if cut_end > length(stage_channel)
             % Edge case 2: the clinical system stopped before HD-EEG
@@ -223,13 +223,13 @@ if nargout > 1
         else
             EEGvec_stage_channel = stage_channel(cut_begin:cut_end);
         end
-        
+
         % pad zeros at the beginning
         EEGvec_stage_channel = [zeropad; EEGvec_stage_channel];
-        
+
         % Final check that stage channel length in EEG timeframe is correct
         assert(length(EEGvec_stage_channel) == rvsalign_store.original_length, 'Length of stage_channel in EEG timeframe is incorrect.')
-        
+
     end
 end
 

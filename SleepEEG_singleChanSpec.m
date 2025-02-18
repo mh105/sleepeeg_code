@@ -1,4 +1,4 @@
-function [] = SleepEEG_singleChanSpec(subID, fnsuffix, data, channelNum, srate, hrscale, fileID, outputDir)
+function [] = SleepEEG_singleChanSpec(subID, fnsuffix, data, channelNum, project, srate, hrscale, fileID, outputDir)
 %
 % **ADSLEEPEEG_PREPROCESSING FUNCTION - SINGLECHANSPEC**
 %
@@ -21,6 +21,9 @@ function [] = SleepEEG_singleChanSpec(subID, fnsuffix, data, channelNum, srate, 
 %                           downsampled as well).
 %
 %           - channelNum:   a 1 x M vector containing channel numbers.
+%
+%           - project:      an optional string to specify project name for
+%                           path configuration.
 %
 %           - srate:        original sampling rate, double type.
 %                           default: 1000 (Hz)
@@ -46,6 +49,7 @@ assert(size(data,1) == length(channelNum), 'Number of channels in data dismatche
 
 % Default flag variables
 if nargin < 5
+    project = '';
     srate = 1000; % default sampling rate is 1000Hz
     hrscale = false;
 end
@@ -66,14 +70,13 @@ disp([mHead, 'Single channels plotted in original sampling frequency: ', num2str
 
 %% Define Directories of Codes and Data Folders
 if ~exist('outputDir', 'var')
-    [~, ~, fileID, outputDir] = SleepEEG_configDir(subID, fnsuffix, false);
+    [~, ~, fileID, outputDir] = SleepEEG_configDir(subID, fnsuffix, false, project);
 end
 
 %% Plot single channel spectrograms
 for i = 1:length(channelNum) % loop through each channel number
-    
+
     %% Compute spectrograms of the channel
-    
     %multitaper_spectrogram_mex.m
     %   Input:
     %   data: <number of samples> x 1 vector - time series data -- required
@@ -86,23 +89,22 @@ for i = 1:length(channelNum) % loop through each channel number
     %   weighting: string - weighting of tapers ('unity' (default), 'eigen', 'adapt');
     %   plot_on: boolean to plot results (default: true)
     %   verbose: boolean to display spectrogram properties (default: true)
-    
+
     % display MTM parameters only once
     if i == 1; verbose=true; else; verbose=false; end
-    
+
     % compute spectrogram up to Nyquist freq
     [mt_spectrogram,stimes,sfreqs] = multitaper_spectrogram_mex(data(i,:), srate, [0, srate/2],...
         [5, 9], [30, 5], 0, 'constant', 'unity', false, verbose);
-    
+
     %% Plot MTM spectrograms
-    
     % Generate a plot
     figure
     ax = figdesign(3,2,'merge',{1:2, 3:4, 5:6});
     for ii = 1:length(ax); title(ax(ii), ii); end
     set(gcf, 'units', 'pixels', 'Position', [0 0 1400 1000]);
-    
-    
+
+
     axes(ax(1)); %#ok<*LAXES>
     imagesc(stimes, sfreqs, pow2db(mt_spectrogram));
     axis xy
@@ -115,14 +117,14 @@ for i = 1:length(channelNum) % loop through each channel number
     colormap jet
     climscale;
     axis tight
-    
+
     %% Plot time trace on the same plot
     if hrscale
         t = linspace(0, length(data(i,:))/srate, length(data(i,:)))./60/60; % convert to hour scale
     else
         t = linspace(0, length(data(i,:))/srate, length(data(i,:))); % in second scale
     end
-    
+
     % Visualize detrended electrodes
     axes(ax(2));
     plot(t, detrend(data(i,:)))
@@ -133,12 +135,11 @@ for i = 1:length(channelNum) % loop through each channel number
     set(gca, 'FontSize', 16)
     axis tight
     colorbar
-    
+
     % Link axis to spectrogram
     linkaxes([ax(1) ax(2)], 'x')
-    
+
     %% Plot the median spectrum
-    
     axes(ax(3));
     y = median(mt_spectrogram, 2);
     plot(sfreqs, pow2db(y), 'LineWidth', 2)
@@ -148,13 +149,12 @@ for i = 1:length(channelNum) % loop through each channel number
     ylabel('Average PSD (dB)')
     set(gca, 'FontSize', 16)
     axis tight
-    
+
     %% Save figure
-    
     saveas(gcf, fullfile(outputDir, [fileID '_Raw_channel_' num2str(channelNum(i)) '_srate' num2str(srate) '_spectrogram.png']))
     % Also save a MATLAB .fig file for manipulations and zoom-in/out
     savefig(fullfile(outputDir, [fileID '_Raw_channel_' num2str(channelNum(i)) '_srate' num2str(srate) '_spectrogram.fig']))
-    
+
     close all
 end
 

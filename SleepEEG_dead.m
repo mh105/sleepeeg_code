@@ -1,4 +1,4 @@
-function [ Deadidx ] = SleepEEG_dead(subID, fnsuffix, EEG, fileID, outputDir, visualize)
+function [ Deadidx ] = SleepEEG_dead(subID, fnsuffix, project, EEG, fileID, outputDir, visualize)
 %
 % **ADSLEEPEEG_PREPROCESSING FUNCTION - DEAD**
 %
@@ -13,6 +13,9 @@ function [ Deadidx ] = SleepEEG_dead(subID, fnsuffix, EEG, fileID, outputDir, vi
 %                           EEG .cnt file, usually "night1(2)_Sleep".
 %
 %                           ***the final file name is in the form: subID_fnsuffix.cnt***
+%
+%           - project:      an optional string to specify project name for
+%                           path configuration.
 %
 %           - EEG:          data structure containing the EEG data and
 %                           impedance values.
@@ -35,6 +38,10 @@ function [ Deadidx ] = SleepEEG_dead(subID, fnsuffix, EEG, fileID, outputDir, vi
 %
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+if nargin < 3
+    project = '';
+end
+
 %% Command window display settings
 % Beginning of command window messages.
 mHead = 'SleepEEG: ';
@@ -47,15 +54,15 @@ disp([mHead 'SleepEEG_dead()']);
 disp('-------------------------')
 
 %% Load Data if the EEG structure is not an input
-if nargin < 3
-    [ dataDir, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix);
+if nargin < 4
+    [ dataDir, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix, false, project);
     assert(isfile(fullfile(dataDir, subID, 'set', [subID, '_', fnsuffix, '_ds500_Z3.set'])),...
         [mHead, 'Downsampled data set .set file is not available for ' fileID])
-    EEG = SleepEEG_loadset(subID, fnsuffix);
+    EEG = SleepEEG_loadset(subID, fnsuffix, project);
 end
 
 if ~exist('fileID', 'var')
-    [ ~, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix);
+    [ ~, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix, false, project);
 end
 
 if ~exist('visualize', 'var')
@@ -73,7 +80,7 @@ EEG.endimp(EEG.endimp > 500) = NaN;
 
 % Visualize dead electrodes as long as we have end impedance measures
 if ~isempty(EEG.endimp)
-    
+
     Deadidx = [];
     for i = 1:size(EEG.data, 1)
         % Flagged dead either initial or end impedance > 500kOhm
@@ -86,7 +93,7 @@ if ~isempty(EEG.endimp)
             %             Deadidx(length(Deadidx)+1) = i;
         end
     end
-    
+
     if visualize
         % visualize dead electrodes
         figure; topoplot([],EEG.chanlocs,'style','both','electrodes','ptslabels','emarker', {'.', 'k', 15, 1});
@@ -104,15 +111,15 @@ if ~isempty(EEG.endimp)
         end
         title(title_text, 'FontSize', 30, 'Interpreter', 'none')
         saveas(gcf, fullfile(outputDir, [fileID '_dead_electrodes.png']))
-        
+
         close all
     end
-    
+
 else
     warning('End Impedance values are unavailable!')
     warning('This might be because the recording was not ended properly, likely from software crashed half way!')
     Deadidx = [];
-    
+
 end
 
 %% Remove the unipolar reference electrode from outputted Deadidx

@@ -1,4 +1,4 @@
-function [ channelNum, srate ] = SleepEEG_extractChan(subID, fnsuffix, channelNum, dataDir, datafn, fileID)
+function [ channelNum, srate ] = SleepEEG_extractChan(subID, fnsuffix, channelNum, project, dataDir, datafn, fileID)
 %
 % **ADSLEEPEEG_PREPROCESSING FUNCTION - EXTRACTCHAN**
 %
@@ -18,6 +18,17 @@ function [ channelNum, srate ] = SleepEEG_extractChan(subID, fnsuffix, channelNu
 %           - channelNum:   a vector containing channel numbers to extract,
 %                           e.g. [25, 84].
 %
+%           - project:      an optional string to specify project name for
+%                           path configuration.
+%
+%           - dataDir:      directory path containing all subjects' data.
+%
+%           - datafn:       full path to the .cnt file including preceding
+%                           directories. Can be obtained from
+%                           SleepEEG_configDir(subID, fnsuffix, verbose)
+%
+%           - fileID:       name of the .cnt file (no .cnt suffix).
+%
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 % ##### Outputs:
 %
@@ -31,6 +42,9 @@ function [ channelNum, srate ] = SleepEEG_extractChan(subID, fnsuffix, channelNu
 
 if nargin < 3
     channelNum = [25, 84]; % by default extract Z10-25, Z2-84
+    project = '';
+elseif nargin < 4
+    project = '';
 end
 
 %% Command window display settings
@@ -49,7 +63,7 @@ disp([mHead, 'Extracting channels in original sampling frequency: ', num2str(cha
 
 %% Define Directories of Codes and Data Folders
 if ~exist('dataDir', 'var')
-    [dataDir, datafn, fileID, ~] = SleepEEG_configDir(subID, fnsuffix, false);
+    [dataDir, datafn, fileID, ~] = SleepEEG_configDir(subID, fnsuffix, false, project);
 end
 
 %% Report EEG Record Length
@@ -95,21 +109,21 @@ for i = 1:length(sample_point)-1
     end
     sample2 = sample_point(i+1);
     disp([mHead, 'Loading the ' num2str(i) 'th segment...'])
-    
+
     % use pop_loadeep_v4.m function to load in the segment
     EEG = pop_loadeep_v4(datafn, 'sample1', sample1, 'sample2', sample2);
-    
+
     % store the sampling rate
     srate = EEG.srate;
-    
+
     for j = channelNum % loop through each channel number
         chan_data = EEG.data(j, :);
-        
+
         % save the segment for ONE channel
         filename = [fileID '_Channel_' num2str(j) '_' num2str(i) '_segment'];
         save(fullfile(dataDir, subID, 'temp', filename), 'chan_data')
     end
-    
+
     % clearvars to save memory
     clearvars EEG chan_data
 end

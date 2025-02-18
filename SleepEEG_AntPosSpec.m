@@ -1,4 +1,4 @@
-function [] = SleepEEG_AntPosSpec(subID, fnsuffix, EEG, chanlist, fileID, outputDir)
+function [] = SleepEEG_AntPosSpec(subID, fnsuffix, project, EEG, chanlist, fileID, outputDir)
 %
 % **ADSLEEPEEG_PREPROCESSING FUNCTION - ANTPOSSPEC**
 %
@@ -15,6 +15,9 @@ function [] = SleepEEG_AntPosSpec(subID, fnsuffix, EEG, chanlist, fileID, output
 %                           EEG .cnt file, usually "night1(2)_Sleep".
 %
 %                           ***the final file name is in the form: subID_fnsuffix.cnt***
+%
+%           - project:      an optional string to specify project name for
+%                           path configuration.
 %
 %           - EEG:          data structure containing the EEG data and
 %                           impedance values.
@@ -34,11 +37,13 @@ function [] = SleepEEG_AntPosSpec(subID, fnsuffix, EEG, chanlist, fileID, output
 %
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+if nargin < 3
+    project = '';
+end
+
 %% Command window display settings
 % Beginning of command window messages.
 mHead = 'SleepEEG: ';
-% Spaces that can be used to replace mHead for better alignment of messages.
-mSpace = repmat(sprintf(' '), 1, length(mHead));
 
 %%
 disp('-------------------------------')
@@ -46,11 +51,11 @@ disp([mHead 'SleepEEG_AntPosSpec()']);
 disp('-------------------------------')
 
 %% Load Data if the EEG structure is not an input
-if nargin < 3
-    [ dataDir, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix);
+if nargin < 4
+    [ dataDir, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix, false, project);
     assert(isfile(fullfile(dataDir, subID, 'set', [subID, '_', fnsuffix, '_ds500_Z3.set'])),...
         [mHead, 'Downsampled data set .set file is not available for ' fileID])
-    EEG = SleepEEG_loadset(subID, fnsuffix);
+    EEG = SleepEEG_loadset(subID, fnsuffix, project);
 end
 
 if ~exist('chanlist', 'var')
@@ -60,7 +65,7 @@ if ~exist('chanlist', 'var')
 end
 
 if ~exist('fileID', 'var')
-    [ ~, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix);
+    [ ~, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix, false, project);
 end
 
 fileID = [fileID, '_', EEG.refscheme]; % specify the referencing scheme in filenames
@@ -158,7 +163,7 @@ sfreqs = cell(2,length(chanlist));
 for i = 1:length(chanlist)
     % display MTM parameters only once
     if i == 1; verbose=true; else; verbose=false; end
-    
+
     [mt_spectrogram{1,i},stimes{1,i},sfreqs{1,i}] = multitaper_spectrogram_mex(EEG.data(chanlist(i),:), EEG.srate, [0, (EEG.srate)/2],...
         [5, 9], [5, 1], 0, 'linear', 'unity', false, verbose);
 end
@@ -208,7 +213,7 @@ set(gca, 'FontSize', 16)
 colormap jet
 climscale;
 axis tight
-cspect1 = caxis;
+cspect1 = clim;
 
 
 axes(ax(2));
@@ -272,7 +277,7 @@ set(gca, 'FontSize', 16)
 colormap jet
 climscale;
 axis tight
-cspect2 = caxis;
+cspect2 = clim;
 
 
 axes(ax(6));
@@ -320,9 +325,9 @@ text(0.1, 0.2, line3, 'FontSize', 16)
 
 % Adjust the plot axes limits
 axes(ax(1));
-caxis([min(cspect1(1), cspect2(1)), max(cspect1(2), cspect2(2))]);
+clim([min(cspect1(1), cspect2(1)), max(cspect1(2), cspect2(2))]);
 axes(ax(5));
-caxis([min(cspect1(1), cspect2(1)), max(cspect1(2), cspect2(2))]);
+clim([min(cspect1(1), cspect2(1)), max(cspect1(2), cspect2(2))]);
 axes(ax(2));
 ylim([min(ylimit1(1), ylimit2(1)), max(ylimit1(2), ylimit2(2))]);
 axes(ax(6));

@@ -1,4 +1,4 @@
-function [] = SleepEEG_hypno(subID, fnsuffix, channel, datasource)
+function [] = SleepEEG_hypno(subID, fnsuffix, channel, project, datasource)
 %
 % **ADSLEEPEEG_PREPROCESSING FUNCTION - HYPNO**
 %
@@ -27,6 +27,9 @@ function [] = SleepEEG_hypno(subID, fnsuffix, channel, datasource)
 %                           string character from F3,F4,C3,C4,O1,O2.
 %                           default: {'Z6', 'C3'}, or {87, 'C3'}
 %
+%           - project:      an optional string to specify project name for
+%                           path configuration.
+%
 %           - datasource:   datasource to plot the spectrogram from. Can be
 %                           'eeg' for grabbing channel from HD-EEG .set
 %                           file, 'edf' for grabbing channel from aligned
@@ -42,6 +45,9 @@ function [] = SleepEEG_hypno(subID, fnsuffix, channel, datasource)
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if nargin < 4
+    project = '';
+    datasource = 'both';
+elseif nargin < 5
     datasource = 'both';
 end
 if ~exist('channel', 'var')
@@ -51,7 +57,7 @@ elseif isempty(channel)
     eegchannel = 'Z6';
     edfchannel = 'C3';
 else
-    if length(channel) == 1 && strcmp(datasource, 'eeg')
+    if isscalar(channel) && strcmp(datasource, 'eeg')
         eegchannel = channel;
     elseif isa(channel, 'char') && strcmp(datasource, 'edf')
         edfchannel = channel;
@@ -67,8 +73,6 @@ assert(isa(edfchannel, 'char'), 'Specified EDF channel must be a string for Slee
 %% Command window display settings
 % Beginning of command window messages.
 mHead = 'SleepEEG: ';
-% Spaces that can be used to replace mHead for better alignment of messages.
-mSpace = repmat(sprintf(' '), 1, length(mHead));
 
 %%
 disp('--------------------------')
@@ -79,10 +83,10 @@ tic
 
 %%
 % Add path to the necessary codes
-SleepEEG_addpath(matlabroot);
+SleepEEG_addpath(matlabroot, project);
 
 % Construct correct paths and filenames
-[dataDir, ~, ~, ~] = SleepEEG_configDir(subID, fnsuffix, true);
+[dataDir, ~, ~, ~] = SleepEEG_configDir(subID, fnsuffix, false, project);
 
 clinicalpath = fullfile(dataDir, subID, 'clinical');
 analysispath = fullfile(dataDir, subID, 'analysis');
@@ -112,11 +116,11 @@ disp([mHead, 'Plotting spectrograms with the hypnogram overlayed...'])
 if strcmp(datasource, 'eeg') ||  strcmp(datasource, 'both')
     %% Compute spectrogram based on an EEG channel from the EEG data
     % with hypnogram aligned and save the plot to "analysis"
-    
-    EEG = SleepEEG_loadset(subID, fnsuffix, true, 'Z3', true);
+
+    EEG = SleepEEG_loadset(subID, fnsuffix, project, true, 'Z3', true);
     % confirm that the length of EEGvec_stage_channel is correct
     assert(length(EEGvec_stage_channel) == size(EEG.data,2), 'Length of stage channel in EEG timeframe is incorrect.')
-    
+
     % figure out which channel to compute the spectrogram on
     eegchannel_num = 0;
     if isa(eegchannel, 'char')
@@ -129,29 +133,29 @@ if strcmp(datasource, 'eeg') ||  strcmp(datasource, 'both')
         eegchannel_num = eegchannel;
     end
     assert(eegchannel_num > 0, 'Invalid channel number for the EEG .set data.')
-    
+
     Fs = EEG.srate;
     t = EEG.times/1000;
-    
+
     % calculate the spectrogram
     [mt_spectrogram, stimes, sfreqs] = multitaper_spectrogram_mex(EEG.data(eegchannel_num,:),...
         Fs, [0, Fs/2], [15, 29], [30, 5], 2^14, 'linear', 'unity', false, false);
-    
+
     % plot spectrogram
     visfreq = [0,40];
     freq_idx = sfreqs>=visfreq(1) & sfreqs <= visfreq(2);
-    
+
     figure;
     ax = figdesign(3,1,'merge',{2:3});
     for ii = 1:length(ax); title(ax(ii), ii); end
     set(gcf, 'units', 'pixels', 'Position', [0 0 1300 900]);
-    
+
     axes(ax(1))
     hypnoplot(t/60, EEGvec_stage_channel);
     title('Hypnogram from Sleep Scoring')
     set(gca, 'FontSize', 16)
     colorbar
-    
+
     axes(ax(2))
     imagesc(stimes/60, sfreqs(freq_idx), pow2db(mt_spectrogram(freq_idx,:)))
     axis xy
@@ -164,7 +168,7 @@ if strcmp(datasource, 'eeg') ||  strcmp(datasource, 'both')
     c = colorbar;
     ylabel(c, 'PSD (dB)');
     set(gca, 'FontSize', 16)
-    
+
     linkaxes([ax(1), ax(2)], 'x')
     saveas(gcf, fullfile(analysispath, [plotID '_spectrohypnogram_EEG_',EEG.chanlocs(eegchannel_num).labels,'.png']))
     savefig(fullfile(analysispath, [plotID '_spectrohypnogram_EEG_',EEG.chanlocs(eegchannel_num).labels,'.fig']))
@@ -173,7 +177,7 @@ end
 if strcmp(datasource, 'edf') ||  strcmp(datasource, 'both')
     %% Compute spectrogram based on an EEG channel from the aligned EDF data
     % with hypnogram aligned and save the plot to "clinical"
-    
+
     % figure out which analog channel
     if strcmp(edfchannel, 'F3')
         analogchan = 'LL2';
@@ -190,34 +194,34 @@ if strcmp(datasource, 'edf') ||  strcmp(datasource, 'both')
     else
         error('Specified edfchannel is not valid. Please check.')
     end
-    
+
     % grab a channel of signal in the aligned EDF+ file
     [header, signalHeader, signalCell] = SleepEEG_loadedf(fullfile(clinicalpath, alignedfFN), {edfchannel});
     aligned_signal = signalCell{1};
     % create a time vector
     Fs = signalHeader.samples_in_record / header.data_record_duration;
     t = 0:1/Fs:1/Fs*(length(aligned_signal)-1);
-    
+
     % calculate the spectrogram
     [mt_spectrogram, stimes, sfreqs] = multitaper_spectrogram_mex(aligned_signal,...
         Fs, [0, Fs/2], [15, 29], [30, 5], 2^14, 'linear', 'unity', false, false);
-    
+
     % plot spectrogram
     visfreq = [0,40];
     freq_idx = sfreqs>=visfreq(1) & sfreqs <= visfreq(2);
-    
+
     figure;
     ax = figdesign(3,1,'merge',{2:3});
     for ii = 1:length(ax); title(ax(ii), ii); end
     set(gcf, 'units', 'pixels', 'Position', [0 0 1300 900]);
-    
+
     axes(ax(1))
     hypnoplot(t/60, stage_channel);
     title('Hypnogram from Sleep Scoring')
     set(gca, 'FontSize', 16)
     c=colorbar;
     set(c, 'yticklabel', [])
-    
+
     axes(ax(2))
     imagesc(stimes/60, sfreqs(freq_idx), pow2db(mt_spectrogram(freq_idx,:)))
     axis xy
@@ -231,7 +235,7 @@ if strcmp(datasource, 'edf') ||  strcmp(datasource, 'both')
     caxis([-20, 20])
     ylabel(c, 'PSD (dB)');
     set(gca, 'FontSize', 16)
-    
+
     linkaxes([ax(1), ax(2)], 'x')
     saveas(gcf, fullfile(clinicalpath, [plotID '_spectrohypnogram_EDF_',edfchannel,'.png']))
     savefig(fullfile(clinicalpath, [plotID '_spectrohypnogram_EDF_',edfchannel,'.fig']))

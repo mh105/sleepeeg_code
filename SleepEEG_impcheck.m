@@ -1,4 +1,4 @@
-function [ High_imp_electrode ] = SleepEEG_impcheck(subID, fnsuffix, EEG, fileID, outputDir, visualize)
+function [ High_imp_electrode ] = SleepEEG_impcheck(subID, fnsuffix, project, EEG, fileID, outputDir, visualize)
 %
 % **ADSLEEPEEG_PREPROCESSING FUNCTION - IMPCHECK**
 %
@@ -13,6 +13,9 @@ function [ High_imp_electrode ] = SleepEEG_impcheck(subID, fnsuffix, EEG, fileID
 %                           EEG .cnt file, usually "night1(2)_Sleep".
 %
 %                           ***the final file name is in the form: subID_fnsuffix.cnt***
+%
+%           - project:      an optional string to specify project name for
+%                           path configuration.
 %
 %           - EEG:          data structure containing the EEG data and
 %                           impedance values.
@@ -34,6 +37,10 @@ function [ High_imp_electrode ] = SleepEEG_impcheck(subID, fnsuffix, EEG, fileID
 %
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+if nargin < 3
+    project = '';
+end
+
 %% Command window display settings
 % Beginning of command window messages.
 mHead = 'SleepEEG: ';
@@ -46,11 +53,11 @@ disp([mHead 'SleepEEG_impcheck()']);
 disp('-----------------------------')
 
 %% Load Data if the EEG structure is not an input
-if nargin < 3
-    [ dataDir, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix);
+if nargin < 4
+    [ dataDir, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix, false, project);
     assert(isfile(fullfile(dataDir, subID, 'set', [subID, '_', fnsuffix, '_ds500_Z3.set'])),...
         [mHead, 'Downsampled data set .set file is not available for ' fileID])
-    EEG = SleepEEG_loadset(subID, fnsuffix);
+    EEG = SleepEEG_loadset(subID, fnsuffix, project);
 end
 
 if ~exist('visualize', 'var')

@@ -21,15 +21,9 @@ function [] = SleepEEG_plot2delc(subID, chanlocs, EEG)
 %
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-%% Command window display settings
-% Beginning of command window messages.
-mHead = 'SleepEEG: ';
-% Spaces that can be used to replace mHead for better alignment of messages.
-mSpace = repmat(sprintf(' '), 1, length(mHead));
-
 %% Configure inputs 
 
-assert(exist('chanlocs', 'var') || exist('EEG', 'var'), 'Either chanlocs or EEG structure needs to be inputted for now.')
+assert(exist('chanlocs', 'var') || exist('EEG', 'var'), 'Either chanlocs or EEG structure needs to be inputed for now.')
 
 if ~exist('EEG', 'var')
     EEG = eeg_emptyset();

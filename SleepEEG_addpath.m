@@ -1,4 +1,4 @@
-function [ dataDir, subject_list ] = SleepEEG_addpath(envpath)
+function [ dataDir, subject_list ] = SleepEEG_addpath(envpath, project)
 %
 % **ADSLEEPEEG_PREPROCESSING FUNCTION - ADDPATH**
 %
@@ -10,6 +10,9 @@ function [ dataDir, subject_list ] = SleepEEG_addpath(envpath)
 %           - envpath:      a root path string returned by matlab system
 %                           command matlabroot.
 %
+%           - project:      an optional string to specify project name for
+%                           path configuration.
+%
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 % ###### Outputs:
 %
@@ -17,32 +20,40 @@ function [ dataDir, subject_list ] = SleepEEG_addpath(envpath)
 %
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+if nargin < 2
+    project = '';
+end
 
 %%
 if strcmp(envpath(1:13), '/Applications')
     % ---------- for Alex local env -------------
     % set up directories
-    rootDir = '~/Dropbox/Active_projects/EEG';
+    if isempty(project)
+        rootDir = '~/Dropbox/Active_projects/EEG';
+    else
+        rootDir = ['~/Dropbox/Active_projects/', project];
+    end
+    code_rootDir = '~/Dropbox/Active_projects/EEG/code';
 
     % Add path to Alex's code folder
-    addpath([rootDir, '/code/sleepeeg_code'])
+    addpath([code_rootDir, '/sleepeeg_code'])
 
     % Add path to ANT_interface_code folder
-    addpath([rootDir, '/code/ANT_interface_code'])
+    addpath([code_rootDir, '/ANT_interface_code'])
 
     % Add path to ANT importer
-    addpath([rootDir, '/code/ANT_interface_code/ANTeepimport1.13'])
+    addpath([code_rootDir, '/ANT_interface_code/ANTeepimport1.13'])
 
     % Add path to EEGLAB
-    addpath([rootDir, '/code/ANT_interface_code/eeglab14_1_2b'])
+    addpath([code_rootDir, '/ANT_interface_code/eeglab14_1_2b'])
     eeglab nogui;
 
     % Add path to EEGLAB firfilt plugin for pop_resample()
-    addpath([rootDir, '/code/ANT_interface_code/eeglab14_1_2b/plugins/firfilt1.6.2'])
+    addpath([code_rootDir, '/ANT_interface_code/eeglab14_1_2b/plugins/firfilt1.6.2'])
 
     % Add path to helper functions
-    addpath([rootDir, '/code/sleepeeg_code/helper_functions'])
-    addpath([rootDir, '/code/sleepeeg_code/helper_functions/EDF_Deidentification_updated'])
+    addpath([code_rootDir, '/sleepeeg_code/helper_functions'])
+    addpath([code_rootDir, '/sleepeeg_code/helper_functions/EDF_Deidentification_updated'])
 
     % Add path to Data folder
     currentpath = pwd;
@@ -56,27 +67,32 @@ else
     % for the *** aeas *** project folder
 
     % set up root directories
-    rootDir = '/remote/projects/aeas';
+    if isempty(project)
+        rootDir = '/remote/projects/aeas';
+    else
+        rootDir = ['/remote/projects/', project];
+    end
+    code_rootDir = '/remote/users/mh1/code';
 
     % Add path to Alex's code folder
-    addpath('/remote/users/mh1/code/sleepeeg_code')
+    addpath([code_rootDir, '/sleepeeg_code'])
 
     % Add path to ANT_interface_code folder
-    addpath('/remote/users/mh1/code/ant_interface_code')
+    addpath([code_rootDir, '/ant_interface_code'])
 
     % Add path to ANT importer
-    addpath('/remote/users/mh1/code/ant_interface_code/ANTeepimport1.13')
+    addpath([code_rootDir, '/ant_interface_code/ANTeepimport1.13'])
 
     % Add path to EEGLAB
-    addpath('/remote/users/mh1/code/ant_interface_code/eeglab14_1_2b')
+    addpath([code_rootDir, '/ant_interface_code/eeglab14_1_2b'])
     eeglab nogui;
 
     % Add path to EEGLAB firfilt plugin for pop_resample()
-    addpath('/remote/users/mh1/code/ant_interface_code/eeglab14_1_2b/plugins/firfilt1.6.2')
+    addpath([code_rootDir, '/ant_interface_code/eeglab14_1_2b/plugins/firfilt1.6.2'])
 
     % Add path to helper functions
-    addpath('/remote/users/mh1/code/sleepeeg_code/helper_functions')
-    addpath('/remote/users/mh1/code/sleepeeg_code/helper_functions/EDF_Deidentification_updated')
+    addpath([code_rootDir, '/sleepeeg_code/helper_functions'])
+    addpath([code_rootDir, '/sleepeeg_code/helper_functions/EDF_Deidentification_updated'])
 
     % Add path to Data folder
     dataDir = fullfile(rootDir, 'subject_data');

@@ -1,4 +1,4 @@
-function [ dataDir, datafn, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix, verbose)
+function [ dataDir, datafn, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix, verbose, project)
 %
 % **ADSLEEPEEG_PREPROCESSING FUNCTION - CONFIGDIR**
 %
@@ -22,6 +22,9 @@ function [ dataDir, datafn, fileID, outputDir ] = SleepEEG_configDir(subID, fnsu
 %           - verbose:      whether print messages during processing.
 %                           default: true
 %
+%           - project:      an optional string to specify project name for
+%                           path configuration.
+%
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 % ##### Outputs:
 %
@@ -43,13 +46,15 @@ function [ dataDir, datafn, fileID, outputDir ] = SleepEEG_configDir(subID, fnsu
 
 if nargin < 3
     verbose = true;
+    project = '';
+end
+if nargin < 4
+    project = '';
 end
 
 %% Command window display settings
 % Beginning of command window messages.
 mHead = 'SleepEEG: ';
-% Spaces that can be used to replace mHead for better alignment of messages.
-mSpace = repmat(sprintf(' '), 1, length(mHead));
 
 %%
 if verbose
@@ -60,7 +65,7 @@ end
 
 %% Addpath to appropriate folders
 % matlabroot will help detect the current environment
-dataDir = SleepEEG_addpath(matlabroot);
+dataDir = SleepEEG_addpath(matlabroot, project);
 
 %% Instantiate Subject Data and Path Directories
 if isempty(fnsuffix) % if fnsuffix is not specified, we process all available data for the subject

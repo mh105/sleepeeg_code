@@ -1,4 +1,4 @@
-function [ EB ] = SleepEEG_bridge(subID, fnsuffix, EEG, fileID, outputDir)
+function [ EB ] = SleepEEG_bridge(subID, fnsuffix, project, EEG, fileID, outputDir)
 %
 % **ADSLEEPEEG_PREPROCESSING FUNCTION - BRIDGE**
 %
@@ -13,6 +13,9 @@ function [ EB ] = SleepEEG_bridge(subID, fnsuffix, EEG, fileID, outputDir)
 %                           EEG .cnt file, usually "night1(2)_Sleep".
 %
 %                           ***the final file name is in the form: subID_fnsuffix.cnt***
+%
+%           - project:      an optional string to specify project name for
+%                           path configuration.
 %
 %           - EEG:          data structure containing the EEG data and
 %                           impedance values.
@@ -31,11 +34,14 @@ function [ EB ] = SleepEEG_bridge(subID, fnsuffix, EEG, fileID, outputDir)
 %                           suffix.
 %
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+if nargin < 3
+    project = '';
+end
+
 %% Command window display settings
 % Beginning of command window messages.
 mHead = 'SleepEEG: ';
-% Spaces that can be used to replace mHead for better alignment of messages.
-mSpace = repmat(sprintf(' '), 1, length(mHead));
 
 %%
 disp('---------------------------')
@@ -43,15 +49,15 @@ disp([mHead 'SleepEEG_bridge()']);
 disp('---------------------------')
 
 %% Load Data if the EEG structure is not an input
-if nargin < 3
-    [ dataDir, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix);
+if nargin < 4
+    [ dataDir, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix, false, project);
     assert(isfile(fullfile(dataDir, subID, 'set', [subID, '_', fnsuffix, '_ds500_Z3.set'])),...
         [mHead, 'Downsampled data set .set file is not available for ' fileID])
-    EEG = SleepEEG_loadset(subID, fnsuffix);
+    EEG = SleepEEG_loadset(subID, fnsuffix, project);
 end
 
 if ~exist('fileID', 'var')
-    [ ~, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix);
+    [ ~, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix, false, project);
 end
 
 % Bridging detection isn't affected by re-referencing, so we won't append

@@ -1,4 +1,4 @@
-function [ EEG ] = SleepEEG_loadset(subID, fnsuffix, downsampled, reref, verbose)
+function [ EEG ] = SleepEEG_loadset(subID, fnsuffix, project, downsampled, reref, verbose)
 %
 % **ADSLEEPEEG_PREPROCESSING FUNCTION - LOADSET**
 %
@@ -10,9 +10,12 @@ function [ EEG ] = SleepEEG_loadset(subID, fnsuffix, downsampled, reref, verbose
 %           - subID:        a string of subject identifier: e.g. "SP001".
 %
 %           - fnsuffix:     a string of suffix to identify a specific
-%                           EEG .cnt file, usually "night1(2)_Sleep". 
+%                           EEG .cnt file, usually "night1(2)_Sleep".
 %
 %                           ***the final file name is in the form: subID_fnsuffix_ds500.set***
+%
+%           - project:      an optional string to specify project name for
+%                           path configuration.
 %
 %           - downsampled:  whether to add '_ds500' when loading data.
 %                           default: true
@@ -33,21 +36,24 @@ function [ EEG ] = SleepEEG_loadset(subID, fnsuffix, downsampled, reref, verbose
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 if nargin < 3
+    project = '';
     downsampled = true;
     reref = 'Z3';
     verbose = true;
 elseif nargin < 4
+    downsampled = true;
     reref = 'Z3';
     verbose = true;
 elseif nargin < 5
+    reref = 'Z3';
+    verbose = true;
+elseif nargin < 6
     verbose = true;
 end
 
 %% Command window display settings
 % Beginning of command window messages.
 mHead = 'SleepEEG: ';
-% Spaces that can be used to replace mHead for better alignment of messages.
-mSpace = repmat(sprintf(' '), 1, length(mHead));
 
 %%
 disp('----------------------------')
@@ -55,19 +61,19 @@ disp([mHead 'SleepEEG_loadset()']);
 disp('----------------------------')
 
 %% Define Directories of Codes and Data Folders
-[dataDir, ~, ~, ~] = SleepEEG_configDir(subID, fnsuffix, verbose);
+[dataDir, ~, ~, ~] = SleepEEG_configDir(subID, fnsuffix, verbose, project);
 
 %% Configure filename and filepath
 % for now, filename is hard-coded to load downsampled .set file, we can
 % make it an argument input to load different ones.
-if downsampled 
-    filename = [subID, '_', fnsuffix, '_ds500_', reref, '.set']; 
+if downsampled
+    filename = [subID, '_', fnsuffix, '_ds500_', reref, '.set'];
 else
-    filename = [subID, '_', fnsuffix, '_', reref, '.set']; 
+    filename = [subID, '_', fnsuffix, '_', reref, '.set'];
 end
 filepath = fullfile(dataDir, subID, 'set');
 
-%% Load .set file 
+%% Load .set file
 EEG = ANT_interface_loadset(filename, filepath, verbose, false);
 
 end
