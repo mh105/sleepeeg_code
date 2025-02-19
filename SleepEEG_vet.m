@@ -38,7 +38,7 @@ end
 
 diary(infofn)
 disp([mHead, 'Checking subject: ', subID])
-startdatetime = datetime(datetime);
+startdatetime = string(datetime);
 startdatetime = strrep(startdatetime,':','_');
 disp(startdatetime)
 disp(' ')

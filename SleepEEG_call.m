@@ -166,7 +166,7 @@ else % otherwise use fnsuffix to select one .cnt file
         mkdir(logDir) % make the directory if non-existant
     end
 
-    startdatetime = datetime(datetime);
+    startdatetime = string(datetime);
     startdatetime = strrep(startdatetime,':','_');
 
     if ~isempty(datafn)
