@@ -21,7 +21,7 @@ function [] = SleepEEG_vet(subID)
 %
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-%% Addpath to appropriate folders
+%% Add path to appropriate folders
 % matlabroot will help detect the current environment
 dataDir = SleepEEG_addpath(matlabroot);
 subDir = fullfile(dataDir, subID);
