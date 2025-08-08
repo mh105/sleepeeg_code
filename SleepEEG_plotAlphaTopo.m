@@ -105,14 +105,14 @@ topoplot(alpha_power,EEG.chanlocs,'style','both','electrodes','ptsnumbers','emar
 cb = colorbar;
 cb.Label.String = '\muV^2/Hz';
 cb.Label.FontSize = 16;
-title('Alpha PSD Topoplot (Linear Scale)')
+title({fileID, 'Alpha PSD Topoplot (Linear Scale)'}, 'Interpreter', 'none')
 set(gca, 'FontSize', 16)
 subplot(1,2,2)
 topoplot(pow2db(alpha_power),EEG.chanlocs,'style','both','electrodes','ptsnumbers','emarker', {'.', 'k', 15, 1});
 cb = colorbar;
 cb.Label.String = 'dB';
 cb.Label.FontSize = 16;
-title('Alpha PSD Topoplot (Log Scale)')
+title({fileID, 'Alpha PSD Topoplot (Log Scale)'}, 'Interpreter', 'none')
 set(gca, 'FontSize', 16)
 
 saveas(gcf, fullfile(outputDir, [fileID '_Alpha_topoplot.png']))
