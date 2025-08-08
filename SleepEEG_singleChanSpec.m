@@ -57,8 +57,6 @@ end
 %% Command window display settings
 % Beginning of command window messages.
 mHead = 'SleepEEG: ';
-% Spaces that can be used to replace mHead for better alignment of messages.
-mSpace = repmat(sprintf(' '), 1, length(mHead));
 
 %%
 disp('-----------------------------------')
@@ -69,8 +67,12 @@ disp('-----------------------------------')
 disp([mHead, 'Single channels plotted in original sampling frequency: ', num2str(channelNum)])
 
 %% Define Directories of Codes and Data Folders
+if ~exist('fileID', 'var')
+    [ ~, ~, fileID ] = SleepEEG_configDir(subID, fnsuffix, false, project);
+end
+
 if ~exist('outputDir', 'var')
-    [~, ~, fileID, outputDir] = SleepEEG_configDir(subID, fnsuffix, false, project);
+    [ ~, ~, ~, outputDir ] = SleepEEG_configDir(subID, fnsuffix, false, project);
 end
 
 %% Plot single channel spectrograms

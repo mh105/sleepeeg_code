@@ -57,7 +57,11 @@ if nargin < 4
 end
 
 if ~exist('fileID', 'var')
-    [ ~, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix, false, project);
+    [ ~, ~, fileID ] = SleepEEG_configDir(subID, fnsuffix, false, project);
+end
+
+if ~exist('outputDir', 'var')
+    [ ~, ~, ~, outputDir ] = SleepEEG_configDir(subID, fnsuffix, false, project);
 end
 
 % Bridging detection isn't affected by re-referencing, so we won't append
@@ -78,7 +82,8 @@ title([fileID ' ED distribution'], 'Interpreter', 'none')
 saveas(gcf, fullfile(outputDir, [fileID '_bridging_analysis.png']))
 
 % Optional: visualize bridged electrodes
-figure; topoplot([],EEG.chanlocs,'style','both','electrodes','ptslabels','emarker', {'.', 'k', 15, 1});
+figure
+topoplot([],EEG.chanlocs,'style','both','electrodes','ptslabels','emarker', {'.', 'k', 15, 1});
 L = findobj(gcf, 'type', 'Text');
 for ind = EB.Bridged.Indices
     set(L(length(EEG.chanlocs)+1-ind), 'FontSize', 20)

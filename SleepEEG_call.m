@@ -70,6 +70,10 @@ function [ EEG1 ] = SleepEEG_call(subID, fnsuffix, varargin)
 %           - 'bridge':     whether to do bridging analysis.
 %                           default: true
 %
+%           - 'alphaTopo':  frequency range over which to plot the topoplot of
+%                           alpha activity.
+%                           default: [8, 12]
+%
 %           - 'Pick2Spec':  channel number to plot the time traces,
 %                           locations, and spectrograms of 1 anterior and 1
 %                           posterior electrodes.
@@ -98,33 +102,33 @@ warning('off', 'MATLAB:callback:error')
 %% Configure input arguments
 % Construct commandDict structure:
 commandHeadings = {'report','verbose','downsample','dead','interp','reref','oversave',...
-    'impedance','bridge','Pick2Spec','originFs','project'}; % command field names
+    'impedance','bridge','alphaTopo','Pick2Spec','originFs','project'}; % command field names
 
 % Some pre-set command setting keywords:
 if any(strcmpi('all', varargin))
     disp([mHead, 'Preset command "all" used, additional arguments will be updated.']);
     commandDefaults = {true,true,[true,500],true,false,{false,'AR'},false,true,...
-        true,[25,84],[25,84],''};
+        true,[8,12],[25,84],[25,84],''};
 elseif any(strcmpi('checkgel', varargin))
     disp([mHead, 'Preset command "checkgel" used, additional arguments will be updated.']);
     commandDefaults = {false,true,[true,500],true,false,{false,'AR'},false,true,...
-        true,[25,84],[],''};
+        true,[8,12],[25,84],[],''};
 elseif any(strcmpi('none', varargin))
     disp([mHead, 'Preset command "none" used, additional arguments will be updated.']);
     commandDefaults = {false,true,[false,500],false,false,{false,'AR'},false,false,...
-        false,[],[],''};
+        false,[],[],[],''};
 elseif any(strcmpi('spectro', varargin))
     disp([mHead, 'Preset command "spectro" used, additional arguments will be updated.']);
     commandDefaults = {false,true,[true,500],false,false,{false,'AR'},false,false,...
-        false,[25,84],[],''};
+        false,[],[25,84],[],''};
 elseif nargin < 2 % if only subID provided -> call SleepEEG_report.m
     disp([mHead, 'Only subID provided, will call SleepEEG_report().']);
     commandDefaults = {true,false,[false,500],false,false,{false,'AR'},false,false,...
-        false,[],[],''}; fnsuffix = [];
+        false,[],[],[],''}; fnsuffix = [];
 else % default settings
     disp([mHead, 'Pulling default commands, additional arguments will be updated.']);
     commandDefaults = {false,true,[true,500],true,false,{false,'AR'},false,true,...
-        true,[25,84],[],''};
+        true,[8,12],[25,84],[],''};
 end
 
 % Update commandDict values according to varargin
@@ -313,7 +317,7 @@ else % otherwise use fnsuffix to select one .cnt file
     %                           and the end of EEG recording.
     %                           default: true
     if commandDict.impedance
-        SleepEEG_impcheck(subID, fnsuffix, commandDict.project, EEG1, fileID, outputDir);
+        SleepEEG_impcheck(subID, fnsuffix, commandDict.project, EEG1, true, fileID, outputDir);
     end
 
     %% 'bridge'
@@ -321,6 +325,14 @@ else % otherwise use fnsuffix to select one .cnt file
     %                           default: true
     if commandDict.bridge
         SleepEEG_bridge(subID, fnsuffix, commandDict.project, EEG1, fileID, outputDir);
+    end
+
+    %% 'alphaTopo'
+    %           - 'alphaTopo':  frequency range over which to plot the topoplot of
+    %                           alpha activity.
+    %                           default: [8, 12]
+    if ~isempty(commandDict.alphaTopo)
+        SleepEEG_plotAlphaTopo(subID, fnsuffix, commandDict.project, EEG1, commandDict.alphaTopo, fileID, outputDir);
     end
 
     %% 'Pick2Spec'

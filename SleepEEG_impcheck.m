@@ -1,4 +1,4 @@
-function [ High_imp_electrode ] = SleepEEG_impcheck(subID, fnsuffix, project, EEG, fileID, outputDir, visualize)
+function [ High_imp_electrode ] = SleepEEG_impcheck(subID, fnsuffix, project, EEG, visualize, fileID, outputDir) 
 %
 % **ADSLEEPEEG_PREPROCESSING FUNCTION - IMPCHECK**
 %
@@ -20,12 +20,13 @@ function [ High_imp_electrode ] = SleepEEG_impcheck(subID, fnsuffix, project, EE
 %           - EEG:          data structure containing the EEG data and
 %                           impedance values.
 %
+%           - visualize:    whether to generate plots of impedances
+%                           default: true
+%
 %           - fileID:       name of the .cnt file (no .cnt suffix).
 %
 %           - outputDir:    directory path to folder for dumping all
 %                           analyses outputs.
-%
-%           - visualize:    whether to generate plots of impedances
 %
 % - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 % ###### Outputs:
@@ -60,8 +61,16 @@ if nargin < 4
     EEG = SleepEEG_loadset(subID, fnsuffix, project);
 end
 
-if ~exist('visualize', 'var')
+if ~exist('visualize', 'var') || isempty(visualize)
     visualize = true;
+end
+
+if ~exist('fileID', 'var')
+    [ ~, ~, fileID ] = SleepEEG_configDir(subID, fnsuffix, false, project);
+end
+
+if ~exist('outputDir', 'var')
+    [ ~, ~, ~, outputDir ] = SleepEEG_configDir(subID, fnsuffix, false, project);
 end
 
 %% Plot impedance distributions
@@ -78,24 +87,24 @@ if visualize
     savefig(fullfile(outputDir, [fileID '_montage_topoplot.fig']))
     
     % Initial Impedance
-    figure
+    f1 = figure;
     histogram(EEG.initimp, 50)
     xlabel('Impedance k\Omega')
     ylabel('count')
     title([fileID ' Initial Imps'], 'Interpreter', 'none')
     set(gca, 'FontSize', 16)
     saveas(gcf, fullfile(outputDir, [fileID '_InitImp_dist.png']))
-    
+    close(f1)
+
     % End Impedance
-    figure
+    f2 = figure;
     histogram(EEG.endimp, 50)
     xlabel('Impedance k\Omega')
     ylabel('count')
     title([fileID ' End Imps'], 'Interpreter', 'none')
     set(gca, 'FontSize', 16)
     saveas(gcf, fullfile(outputDir, [fileID '_EndImp_dist.png']))
-    
-    close all
+    close(f2)
 end
 
 %% Report electrodes with impedance above 50kOhm by the end of recording

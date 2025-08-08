@@ -59,7 +59,11 @@ disp([mHead, 'Reconstructing channels in original sampling frequency: ', num2str
 
 %% Define Directories of Codes and Data Folders
 if ~exist('dataDir', 'var')
-    [dataDir, datafn, fileID, ~] = SleepEEG_configDir(subID, fnsuffix, false, project);
+    [ dataDir, datafn, fileID, ~ ] = SleepEEG_configDir(subID, fnsuffix, false, project);
+end
+
+if ~exist('fileID', 'var')
+    [ ~, ~, fileID ] = SleepEEG_configDir(subID, fnsuffix, false, project);
 end
 
 %% Report EEG Record Length

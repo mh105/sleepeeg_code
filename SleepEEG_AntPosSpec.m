@@ -58,14 +58,18 @@ if nargin < 4
     EEG = SleepEEG_loadset(subID, fnsuffix, project);
 end
 
-if ~exist('chanlist', 'var')
+if ~exist('chanlist', 'var') || isempty(chanlist)
     % By default, this is going to be 25-Z10 (posterior lead) and 84-Z2
     % (anterior lead) for visualizing the resting state recordings
     chanlist = [25, 84];
 end
 
 if ~exist('fileID', 'var')
-    [ ~, ~, fileID, outputDir ] = SleepEEG_configDir(subID, fnsuffix, false, project);
+    [ ~, ~, fileID ] = SleepEEG_configDir(subID, fnsuffix, false, project);
+end
+
+if ~exist('outputDir', 'var')
+    [ ~, ~, ~, outputDir ] = SleepEEG_configDir(subID, fnsuffix, false, project);
 end
 
 fileID = [fileID, '_', EEG.refscheme]; % specify the referencing scheme in filenames
