@@ -20,8 +20,10 @@ function [] = SleepEEG_plotAlphaTopo(subID, fnsuffix, project, EEG, alpha_range,
 %           - EEG:          data structure containing the EEG data and
 %                           impedance values.
 %
-%           - alpha_range:  frequency range used to sum PSD for alpha activity.
-%                           default: [8, 12]
+%           - alpha_range:  frequency range over which to plot the topoplot of
+%                           alpha activity. The second entry can be used to exclude
+%                           artifact electrodes.
+%                           default: {[8, 12], []}
 %
 %           - fileID:       name of the .cnt file (no .cnt suffix).
 %
@@ -57,8 +59,11 @@ if nargin < 4
 end
 
 if ~exist('alpha_range', 'var') || isempty(alpha_range)
-    alpha_range = [8, 12];
+    alpha_range = {[8, 12], []};
 end
+
+exclude_channels = alpha_range{2};
+alpha_range = alpha_range{1};
 
 if ~exist('fileID', 'var')
     [ ~, ~, fileID ] = SleepEEG_configDir(subID, fnsuffix, false, project);
@@ -97,6 +102,9 @@ for ii = 1:length(alpha_power)
     valid_sfreqs = sfreqs >= alpha_range(1) & sfreqs <= alpha_range(2);
     alpha_power(ii) = sum(mean_spectrum(valid_sfreqs));
 end
+
+% exlude artifact channels
+alpha_power(exclude_channels) = nan;
 
 %% Topoplot of alpha distribution across the scalp
 f = figure;

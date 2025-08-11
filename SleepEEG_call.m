@@ -71,8 +71,9 @@ function [ EEG1 ] = SleepEEG_call(subID, fnsuffix, varargin)
 %                           default: true
 %
 %           - 'alphaTopo':  frequency range over which to plot the topoplot of
-%                           alpha activity.
-%                           default: [8, 12]
+%                           alpha activity. The second entry can be used to exclude
+%                           artifact electrodes
+%                           default: {[8, 12], []}
 %
 %           - 'Pick2Spec':  channel number to plot the time traces,
 %                           locations, and spectrograms of 1 anterior and 1
@@ -108,11 +109,11 @@ commandHeadings = {'report','verbose','downsample','dead','interp','reref','over
 if any(strcmpi('all', varargin))
     disp([mHead, 'Preset command "all" used, additional arguments will be updated.']);
     commandDefaults = {true,true,[true,500],true,false,{false,'AR'},false,true,...
-        true,[8,12],[25,84],[25,84],''};
+        true,{[8, 12], []},[25,84],[25,84],''};
 elseif any(strcmpi('checkgel', varargin))
     disp([mHead, 'Preset command "checkgel" used, additional arguments will be updated.']);
     commandDefaults = {false,true,[true,500],true,false,{false,'AR'},false,true,...
-        true,[8,12],[25,84],[],''};
+        true,{[8, 12], []},[25,84],[],''};
 elseif any(strcmpi('none', varargin))
     disp([mHead, 'Preset command "none" used, additional arguments will be updated.']);
     commandDefaults = {false,true,[false,500],false,false,{false,'AR'},false,false,...
@@ -128,7 +129,7 @@ elseif nargin < 2 % if only subID provided -> call SleepEEG_report.m
 else % default settings
     disp([mHead, 'Pulling default commands, additional arguments will be updated.']);
     commandDefaults = {false,true,[true,500],true,false,{false,'AR'},false,true,...
-        true,[8,12],[25,84],[],''};
+        true,{[8, 12], []},[25,84],[],''};
 end
 
 % Update commandDict values according to varargin
@@ -329,8 +330,9 @@ else % otherwise use fnsuffix to select one .cnt file
 
     %% 'alphaTopo'
     %           - 'alphaTopo':  frequency range over which to plot the topoplot of
-    %                           alpha activity.
-    %                           default: [8, 12]
+    %                           alpha activity. The second entry can be used to exclude
+    %                           artifact electrodes
+    %                           default: {[8, 12], []}
     if ~isempty(commandDict.alphaTopo)
         SleepEEG_plotAlphaTopo(subID, fnsuffix, commandDict.project, EEG1, commandDict.alphaTopo, fileID, outputDir);
     end
