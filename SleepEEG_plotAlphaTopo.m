@@ -108,6 +108,9 @@ alpha_power(exclude_channels) = nan;
 
 %% Topoplot of alpha distribution across the scalp
 f = figure;
+set(f, 'Units', 'inches');
+set(f, 'Position', [1 1 16 10]);
+
 subplot(1,2,1)
 topoplot(alpha_power,EEG.chanlocs,'style','both','electrodes','ptsnumbers','emarker', {'.', 'k', 15, 1});
 cb = colorbar;

@@ -96,14 +96,15 @@ if ~isempty(EEG.endimp)
 
     if visualize
         % visualize dead electrodes
-        figure; topoplot([],EEG.chanlocs,'style','both','electrodes','ptslabels','emarker', {'.', 'k', 15, 1});
+        f = figure;
+        set(f, 'Units', 'inches');
+        set(f, 'Position', [1 1 16 10]);
+        topoplot([],EEG.chanlocs,'style','both','electrodes','ptslabels','emarker', {'.', 'k', 15, 1});
         L = findobj(gcf, 'type', 'Text');
         for ind = Deadidx
             set(L(length(EEG.chanlocs)+1-ind), 'FontSize', 20)
             set(L(length(EEG.chanlocs)+1-ind), 'Color', [0 1 0])
         end
-        pos = get(gcf, 'Position');
-        set(gcf, 'Position', [pos(1:2) pos(3:4)*1.5])
         if ~isempty(EEG.initimp)
             title_text = [fileID ' Dead (Init & End)'];
         else

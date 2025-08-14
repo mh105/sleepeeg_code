@@ -647,10 +647,12 @@ if (EBinput.PlotMode == 2) || ((EBinput.PlotMode == 1) && (EB.Bridged.Count ~= 0
     end
     %Plot the distribution.
     EB.Info.FigHandle = figure('Name',[mBeg inputname(1)]);
-    L = findobj;
-    figDim = L(2).Position;
-    figDim(3) = figDim(3)*2;
-    set(gcf, 'Position', figDim)
+    % L = findobj;
+    % figDim = L(2).Position;
+    % figDim(3) = figDim(3)*2;
+    % set(gcf, 'Position', figDim)
+    set(EB.Info.FigHandle, 'Units', 'inches');
+    set(EB.Info.FigHandle, 'Position', [1 1 16 10]);
     %Full view
     subplot(1,2,1)
     plot(binCentersSPL, EDcountsSPL, 'b-')

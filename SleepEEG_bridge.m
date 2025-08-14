@@ -82,15 +82,15 @@ title([fileID ' ED distribution'], 'Interpreter', 'none')
 saveas(gcf, fullfile(outputDir, [fileID '_bridging_analysis.png']))
 
 % Optional: visualize bridged electrodes
-figure
+f = figure;
+set(f, 'Units', 'inches');
+set(f, 'Position', [1 1 16 10]);
 topoplot([],EEG.chanlocs,'style','both','electrodes','ptslabels','emarker', {'.', 'k', 15, 1});
 L = findobj(gcf, 'type', 'Text');
 for ind = EB.Bridged.Indices
     set(L(length(EEG.chanlocs)+1-ind), 'FontSize', 20)
     set(L(length(EEG.chanlocs)+1-ind), 'Color', [1 0 0])
 end
-pos = get(gcf, 'Position');
-set(gcf, 'Position', [pos(1:2) pos(3:4)*1.5])
 title([fileID ' Bridged'], 'FontSize', 30, 'Interpreter', 'none')
 saveas(gcf, fullfile(outputDir, [fileID '_bridged_electrodes.png']))
 

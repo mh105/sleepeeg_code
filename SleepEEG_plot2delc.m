@@ -32,9 +32,9 @@ end
 
 %%
 % visualize electrode locations 
-figure
-pos = get(gcf, 'Position');
-set(gcf, 'Position', [pos(1:2) pos(3:4)*1.5])
+f = figure;
+set(f, 'Units', 'inches');
+set(f, 'Position', [1 1 16 10]);
 
 topoplot([],EEG.chanlocs,'style','both','electrodes','ptsnumbers','emarker', {'.', 'k', 15, 1});
 

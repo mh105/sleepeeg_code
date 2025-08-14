@@ -101,11 +101,11 @@ for i = 1:length(channelNum) % loop through each channel number
 
     %% Plot MTM spectrograms
     % Generate a plot
-    figure
+    f = figure;
     ax = figdesign(3,2,'merge',{1:2, 3:4, 5:6});
     for ii = 1:length(ax); title(ax(ii), ii); end
-    set(gcf, 'units', 'pixels', 'Position', [0 0 1400 1000]);
-
+    set(f, 'Units', 'inches');
+    set(f, 'Position', [1 1 16 10]);
 
     axes(ax(1)); %#ok<*LAXES>
     imagesc(stimes, sfreqs, pow2db(mt_spectrogram));

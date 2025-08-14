@@ -145,10 +145,11 @@ if strcmp(datasource, 'eeg') ||  strcmp(datasource, 'both')
     visfreq = [0,40];
     freq_idx = sfreqs>=visfreq(1) & sfreqs <= visfreq(2);
 
-    figure;
+    f1 = figure;
     ax = figdesign(3,1,'merge',{2:3});
     for ii = 1:length(ax); title(ax(ii), ii); end
-    set(gcf, 'units', 'pixels', 'Position', [0 0 1300 900]);
+    set(f1, 'Units', 'inches');
+    set(f1, 'Position', [1 1 16 10]);
 
     axes(ax(1))
     hypnoplot(t/60, EEGvec_stage_channel);
@@ -210,10 +211,11 @@ if strcmp(datasource, 'edf') ||  strcmp(datasource, 'both')
     visfreq = [0,40];
     freq_idx = sfreqs>=visfreq(1) & sfreqs <= visfreq(2);
 
-    figure;
+    f1 = figure;
     ax = figdesign(3,1,'merge',{2:3});
     for ii = 1:length(ax); title(ax(ii), ii); end
-    set(gcf, 'units', 'pixels', 'Position', [0 0 1300 900]);
+    set(f1, 'Units', 'inches');
+    set(f1, 'Position', [1 1 16 10]);
 
     axes(ax(1))
     hypnoplot(t/60, stage_channel);

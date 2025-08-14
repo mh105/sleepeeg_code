@@ -88,6 +88,8 @@ if visualize
     
     % Initial Impedance
     f1 = figure;
+    set(f1, 'Units', 'inches');
+    set(f1, 'Position', [1 1 16 10]);
     histogram(EEG.initimp, 50)
     xlabel('Impedance k\Omega')
     ylabel('count')
@@ -98,6 +100,8 @@ if visualize
 
     % End Impedance
     f2 = figure;
+    set(f2, 'Units', 'inches');
+    set(f2, 'Position', [1 1 16 10]);
     histogram(EEG.endimp, 50)
     xlabel('Impedance k\Omega')
     ylabel('count')

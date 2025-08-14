@@ -99,7 +99,10 @@ else
 end
 
 %% Visualize sensor positions
-figure; topoplot([],EEG.chanlocs(chanlist),'style','both','electrodes','ptslabels','emarker', {'.', 'k', 15, 1});
+f = figure;
+set(f, 'Units', 'inches');
+set(f, 'Position', [1 1 16 10]);
+topoplot([],EEG.chanlocs(chanlist),'style','both','electrodes','ptslabels','emarker', {'.', 'k', 15, 1});
 L = findobj(gcf, 'type', 'Text');
 for ind = 1:length(chanlist)-1
     set(L(length(chanlist)+1-ind), 'FontSize', 20)
@@ -117,18 +120,19 @@ else
 end
 % figure specifications
 title(['Channel locations for ' EEG.chanlocs(chanlist(1)).labels '-' num2str(chanlist(1))...
-    ', ' EEG.chanlocs(chanlist(2)).labels '-' num2str(chanlist(2))], 'Interpreter', 'none')
+    ', ' EEG.chanlocs(chanlist(2)).labels '-' num2str(chanlist(2))], 'FontSize', 30, 'Interpreter', 'none')
 legend([EEG.chanlocs(chanlist(1)).labels ' IMP= ' num2str(implist(1))],...
-    [EEG.chanlocs(chanlist(2)).labels ' IMP= ' num2str(implist(2))])
+    [EEG.chanlocs(chanlist(2)).labels ' IMP= ' num2str(implist(2))], 'FontSize', 16)
 legend('Location', 'best')
-set(gca,'FontSize', 16)
 saveas(gcf, fullfile(outputDir, [fileID '_two_channels_location.png']))
 
 chanlist(end) = []; % remove the reference channel after creating topoplot
 
 %% Visualize detrended electrode time traces
 t = EEG.times./(1000); % convert to second scale
-figure
+f = figure;
+set(f, 'Units', 'inches');
+set(f, 'Position', [1 1 16 10]);
 for i = chanlist
     plot(t, detrend(EEG.data(i,:)))
     hold on
@@ -187,10 +191,11 @@ end
 
 %% Plot MTM spectrograms
 % Generate a plot
-figure
+f = figure;
 ax = figdesign(4,3,'merge',{1:2, 4:5, 7:8, 10:11});
 for ii = 1:length(ax); title(ax(ii), ii); end
-set(gcf, 'units', 'pixels', 'Position', [0 0 1400 1000]);
+set(f, 'Units', 'inches');
+set(f, 'Position', [1 1 16 12]);
 
 % For the spectrogram up to Nyquist, don't actually plot it all the way to
 % Nyquist because low-pass filter was applied before downsampling such that
