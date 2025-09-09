@@ -76,7 +76,11 @@ end
 %% Check if the current recording is resting state
 events = EEG.event;
 task_start_code_idx = find(strcmp({events.type}, '100'));
-task_code = events(task_start_code_idx(end) + 1).type;
+if ~isempty(task_start_code_idx)
+    task_code = events(task_start_code_idx(end) + 1).type;
+else
+    task_code = nan; % if no task_start_code used in this recording
+end
 
 if strcmp(task_code, '101')
     % take out the resting state eyes closed data
