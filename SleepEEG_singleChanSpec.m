@@ -155,7 +155,7 @@ for i = 1:length(channelNum) % loop through each channel number
     %% Save figure
     saveas(gcf, fullfile(outputDir, [fileID '_Raw_channel_' num2str(channelNum(i)) '_srate' num2str(srate) '_spectrogram.png']))
     % Also save a MATLAB .fig file for manipulations and zoom-in/out
-    savefig(fullfile(outputDir, [fileID '_Raw_channel_' num2str(channelNum(i)) '_srate' num2str(srate) '_spectrogram.fig']))
+    % savefig(fullfile(outputDir, [fileID '_Raw_channel_' num2str(channelNum(i)) '_srate' num2str(srate) '_spectrogram.fig']))
 
     close all
 end
