@@ -17,6 +17,6 @@ Thumbs.db
 
 #file copies 
 ._*
-.asv
+*.asv
 
 #large files 
