@@ -413,7 +413,6 @@ if nargin >= 4
         signalLocPerRow = horzcat([0],cumsum(signalSamplesPerRecord));
         
         for s = 1:num_signals
-            disp(s)
             % Get signal location
             signalRowWidth = signalSamplesPerRecord(s);
             signalRowStart = signalLocPerRow(s)+1;
