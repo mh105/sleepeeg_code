@@ -399,23 +399,19 @@ if nargin >= 4
         
     	%-------------------------------------------- Process Signal Block
         % Get values to reshape block
-        disp('step1')
         num_data_records = headerStruct.num_data_records;
         getSignalSamplesF = @(x)signalHeaderStruct(x).samples_in_record;
         signalSamplesPerRecord = arrayfun(getSignalSamplesF,[1:num_signals]);
         recordWidth = sum(signalSamplesPerRecord);
         numRecords = num_data_records;
         
-        disp('step2')
         % Create matrix to hold raw results
         A = zeros(recordWidth, num_data_records);
         %A = zeros(recordWidth, 1);%num_data_records);
         
-        disp('step3')
         % Create raw signal cell array
         signalLocPerRow = horzcat([0],cumsum(signalSamplesPerRecord));
         
-        disp('step4')
         for s = 1:num_signals
             disp(s)
             % Get signal location
@@ -423,7 +419,6 @@ if nargin >= 4
             signalRowStart = signalLocPerRow(s)+1;
             signaRowEnd = signalLocPerRow(s+1);
             
-            disp('step5')
             % Get signal
             signal = signalCell{s};
             
@@ -433,7 +428,6 @@ if nargin >= 4
             phy_min = double(signalHeaderStruct(s).physical_min);
             phy_max = double(signalHeaderStruct(s).physical_max);
             
-            disp('step6')
             % Get signal factor 
             signal = (signal-phy_min)/(phy_max-phy_min);
             signal = signal.*double(dig_max-dig_min)+dig_min; 
@@ -441,17 +435,14 @@ if nargin >= 4
             value = (signal-dig_min)/(dig_max-dig_min);
             value = value.*double(phy_max-phy_min)+phy_min; 
             
-            disp('step7')
             % Convert physical signal to digital signal
             signal = reshape(signal, signalSamplesPerRecord(s), ...
                 num_data_records ...
                 );
             
-            disp('step8')
             % Generate signal matrix and put in place
             A(signalLocPerRow(s)+1:signalLocPerRow(s+1), 1:end) = ...
                 signal;
-            disp('step9')
         end
         
         % --------------------------------------------------- Write Signals
