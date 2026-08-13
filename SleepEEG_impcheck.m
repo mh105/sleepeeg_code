@@ -61,6 +61,9 @@ if nargin < 4
     EEG = SleepEEG_loadset(subID, fnsuffix, project);
 end
 
+assert(isa(EEG.data, 'double'), ...
+    'SleepEEG_impcheck() requires EEG.data in double precision.');
+
 if ~exist('visualize', 'var') || isempty(visualize)
     visualize = true;
 end

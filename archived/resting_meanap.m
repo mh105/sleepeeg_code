@@ -11,7 +11,7 @@ savefn = [subID, '_', fnsuffix, '_ds500_AR.set'];
 
 % First, we need to re-reference the data to common average reference
 if isfile(fullfile(dataDir, subID, 'set', savefn))
-    EEG = ANT_interface_loadset(savefn, fullfile(dataDir, subID, 'set'), true, true);
+    EEG = ANT_interface_loadset(savefn, fullfile(dataDir, subID, 'set'), true);
 else
     % First, we need to re-reference the data to common average reference
     EEG = SleepEEG_call(subID, fnsuffix, 'none', 'downsample', [true, 500],...

@@ -46,6 +46,8 @@ function [] = SleepEEG_singleChanSpec(subID, fnsuffix, data, channelNum, project
 
 % Check the dimensions of data and channelNum agree
 assert(size(data,1) == length(channelNum), 'Number of channels in data dismatches the number in channelNum!')
+assert(isa(data, 'double'), ...
+    'SleepEEG_singleChanSpec() requires data in double precision.');
 
 % Default flag variables
 if nargin < 5

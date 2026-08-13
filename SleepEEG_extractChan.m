@@ -116,6 +116,8 @@ for i = 1:length(sample_point)-1
 
     % use pop_loadeep_v4.m function to load in the segment
     EEG = pop_loadeep_v4(datafn, 'sample1', sample1, 'sample2', sample2);
+    assert(isa(EEG.data, 'double'), ...
+        'SleepEEG_extractChan() requires EEG.data in double precision.');
 
     % store the sampling rate
     srate = EEG.srate;

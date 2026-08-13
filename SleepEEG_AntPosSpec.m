@@ -58,6 +58,9 @@ if nargin < 4
     EEG = SleepEEG_loadset(subID, fnsuffix, project);
 end
 
+assert(isa(EEG.data, 'double'), ...
+    'SleepEEG_AntPosSpec() requires EEG.data in double precision.');
+
 if ~exist('chanlist', 'var') || isempty(chanlist)
     % By default, this is going to be 25-Z10 (posterior lead) and 84-Z2
     % (anterior lead) for visualizing the resting state recordings

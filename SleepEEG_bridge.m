@@ -56,6 +56,9 @@ if nargin < 4
     EEG = SleepEEG_loadset(subID, fnsuffix, project);
 end
 
+assert(isa(EEG.data, 'double'), ...
+    'SleepEEG_bridge() requires EEG.data in double precision.');
+
 if ~exist('fileID', 'var')
     [ ~, ~, fileID ] = SleepEEG_configDir(subID, fnsuffix, false, project);
 end

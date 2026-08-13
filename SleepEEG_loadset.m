@@ -74,6 +74,6 @@ end
 filepath = fullfile(dataDir, subID, 'set');
 
 %% Load .set file
-EEG = ANT_interface_loadset(filename, filepath, verbose, false);
+EEG = ANT_interface_loadset(filename, filepath, verbose);
 
 end

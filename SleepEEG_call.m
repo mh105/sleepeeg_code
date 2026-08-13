@@ -301,6 +301,11 @@ else % otherwise use fnsuffix to select one .cnt file
     % the EEG structure, so no saving will be attempted after this point.
     %  ----%%----%%----%%----%%----%%---%%----%%---%%----%%---%%----%%---
 
+    if ~isempty(datafn)
+        assert(isa(EEG1.data, 'double'), ...
+            'SleepEEG_call() must retain EEG.data in double precision after preprocessing.');
+    end
+
     % Report output directory
     if commandDict.verbose
         disp(' ')

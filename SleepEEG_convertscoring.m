@@ -145,7 +145,9 @@ if rvsalign_store.truncate_endidx > rvsalign_store.original_length
     night = txtFN(strfind(txtFN,'_night')+6);
     filename = [subID, '_night' night '_Sleep_ds500_Z3.set'];
     set_filepath = strrep(filepath, 'clinical', 'set');
-    EEG_new = ANT_interface_loadset(filename, set_filepath, true, false);
+    EEG_new = ANT_interface_loadset(filename, set_filepath, true);
+    assert(isa(EEG_new.data, 'double'), ...
+        'SleepEEG_convertscoring() requires loaded EEG.data in double precision.');
     originalEEG = EEG_new.data(label2num('LA2',EEG_new.chanlocs),:); % C3 corresponds to LA2
     
     % find where the aligned_signal_nopadding starts and ends

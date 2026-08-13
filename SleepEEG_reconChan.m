@@ -113,6 +113,8 @@ for j = channelNum % loop through each channel number
         % load in one segment of data
         filename = [fileID '_Channel_' num2str(j) '_' num2str(i) '_segment'];
         load(fullfile(dataDir, subID, 'temp', filename), 'chan_data')
+        assert(isa(chan_data, 'double'), ...
+            'SleepEEG_reconChan() requires loaded chan_data in double precision.');
         disp([mHead, 'Loading the ' num2str(i) 'th channel segment...'])
 
         % specify indices in channel data

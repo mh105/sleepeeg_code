@@ -58,6 +58,9 @@ if nargin < 4
     EEG = SleepEEG_loadset(subID, fnsuffix, project);
 end
 
+assert(isa(EEG.data, 'double'), ...
+    'SleepEEG_plotAlphaTopo() requires EEG.data in double precision.');
+
 if ~exist('alpha_range', 'var') || isempty(alpha_range)
     alpha_range = {[8, 12], []};
 end

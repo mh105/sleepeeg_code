@@ -116,7 +116,7 @@ if ~oversave && isfile(fullfile(dataDir, subID, subfolder, [savefn, '.set']))
         disp(' ')
     end
 
-    EEG = ANT_interface_loadset([savefn, '.set'], fullfile(dataDir, subID, subfolder), verbose, false);
+    EEG = ANT_interface_loadset([savefn, '.set'], fullfile(dataDir, subID, subfolder), verbose);
 
 elseif oversave && isfile(fullfile(dataDir, subID, subfolder, [savefn, '.set']))
     if verbose
@@ -144,5 +144,8 @@ else % otherwise we need to use ANT_interface_readcnt() to load the data
     EEG = ANT_interface_saveset(EEG, savefn, savefilepath, verbose);
 
 end
+
+assert(isa(EEG.data, 'double'), ...
+    'SleepEEG_downsample() must return EEG.data in double precision.');
 
 end
