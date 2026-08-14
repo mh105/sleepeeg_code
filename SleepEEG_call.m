@@ -250,8 +250,8 @@ else % otherwise use fnsuffix to select one .cnt file
     if commandDict.interp
         % Before we do re-referencing, we need to interpolate and recover
         % the dead electrodes except the original reference electrode
-        disp([mHead, 'Dead electrodes interpolated using griddata function with method [v4].'])
-        EEG1 = pop_interp(EEG1, Deadidx, 'v4');
+        disp([mHead, 'Dead electrodes interpolated using griddata function with method [spherical].'])
+        EEG1 = pop_interp(EEG1, Deadidx, 'spherical');
     end
 
     %% "reref"
