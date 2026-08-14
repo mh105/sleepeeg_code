@@ -26,7 +26,7 @@ function [] = SleepEEG_singleChanSpec(subID, fnsuffix, data, channelNum, project
 %                           path configuration.
 %
 %           - srate:        original sampling rate, double type.
-%                           default: 1000 (Hz)
+%                           default: 2000 (Hz)
 %
 %           - hrscale:      whether to use hour scale on time axis, default
 %                           is false, which uses seconds.
@@ -52,7 +52,7 @@ assert(isa(data, 'double'), ...
 % Default flag variables
 if nargin < 5
     project = '';
-    srate = 1000; % default sampling rate is 1000Hz
+    srate = 2000; % default sampling rate is 2000Hz
     hrscale = false;
 end
 

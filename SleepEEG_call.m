@@ -357,7 +357,6 @@ else % otherwise use fnsuffix to select one .cnt file
     %                           downsampling.
     %                           default: []
     if ~isempty(commandDict.originFs)
-
         % This is a debugging tool to confirm that no artifact is introduced
         % in the downsampling process.
 
