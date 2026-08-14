@@ -177,7 +177,7 @@ else % otherwise use fnsuffix to select one .cnt file
     if ~isempty(datafn)
         diary(fullfile(dataDir, subID, 'log', [fileID, '_log_', startdatetime, '.txt']))
     else
-        diary(fullfile(dataDir, subID, 'log', ['_log_', startdatetime, '.txt']))
+        diary(fullfile(dataDir, subID, 'log', ['allData_log_', startdatetime, '.txt']))
     end
 
     disp([mHead, 'Destination folder for log file:'])
