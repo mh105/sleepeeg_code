@@ -85,7 +85,7 @@ function [ EEG1 ] = SleepEEG_call(subID, fnsuffix, varargin)
 %                           downsampling.
 %                           default: []
 %
-%           - project:      an optional string to specify project name for
+%           - 'project':    an optional string to specify project name for
 %                           path configuration.
 %                           default: ''
 %
